@@ -89,7 +89,7 @@ if /i "%ONLY_SERVER%"=="false" (
     if /i "%MODE%"=="dev" (
         start "Client [DEV]" /D "%CLIENT_DIR%" cmd /k "title HelperDesktop Client [DEV] && color 0E && echo Starting client in DEV mode... && npm run dev"
     ) else (
-        start "Client [PROD]" /D "%CLIENT_DIR%" cmd /k "title HelperDesktop Client [PROD] && color 0A && echo Starting client in PROD mode... && npm run start"
+        start "Client [PROD]" /D "%CLIENT_DIR%" cmd /k "title HelperDesktop Client [PROD] && color 0A && echo Starting client in PROD mode... && set VITE_PROD=1 && npm run start"
     )
     echo [OK] Client window opened
 )

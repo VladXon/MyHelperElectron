@@ -17,3 +17,9 @@ root.render(
     </ErrorBoundary>
   </StrictMode>,
 );
+
+if (!import.meta.env.VITE_PROD) {
+  import('react-scan').then(({ scan }) => {
+    scan({ enabled: true, log: true });
+  });
+}
