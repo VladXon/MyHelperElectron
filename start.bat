@@ -29,36 +29,6 @@ set "GRAY=%ESC%[90m"
 set "RESET=%ESC%[0m"
 set "BOLD=%ESC%[1m"
 
-REM --- Функции вывода ---
-:log_info
-echo %GREEN%[INFO]%RESET% %*
-goto :eof
-
-:log_warn
-echo %YELLOW%[WARN]%RESET% %*
-goto :eof
-
-:log_error
-echo %RED%[ERROR]%RESET% %*
-goto :eof
-
-:log_debug
-echo %GRAY%[DEBUG]%RESET% %*
-goto :eof
-
-:log_step
-echo.
-echo %CYAN%%BOLD%=== %* ===%RESET%
-goto :eof
-
-:log_success
-echo %GREEN%[OK]%RESET% %*
-goto :eof
-
-:log_fail
-echo %RED%[FAIL]%RESET% %*
-goto :eof
-
 REM ============================================================
 REM ПАРСИНГ АРГУМЕНТОВ
 REM ============================================================
@@ -82,6 +52,7 @@ shift
 goto :parse_args
 
 :args_done
+goto :env_check
 
 :show_help
 echo.
@@ -90,8 +61,8 @@ echo.
 echo Usage: start.bat [options]
 echo.
 echo Options:
-echo   --prod              Production mode (build + run)
-echo   --dev               Development mode (watch + hot reload) [default]
+echo   --prod              Production mode (tsx + electron-forge start) [default]
+echo   --dev               Development mode (tsx watch + hot reload)
 echo   --skip-deps         Skip dependency installation check
 echo   --skip-db-check     Skip database integrity check
 echo   --only-server       Start only Express server + bot
@@ -100,13 +71,14 @@ echo   --verbose           Verbose output
 echo   --help              Show this help
 echo.
 echo Examples:
-echo   start.bat                    ^<-- dev mode, full stack
-echo   start.bat --prod             ^<-- production build and run
+echo   start.bat                    ^<-- prod mode, full stack
+echo   start.bat --dev              ^<-- dev mode with hot reload
 echo   start.bat --only-server      ^<-- server only (for API testing)
 echo   start.bat --only-client      ^<-- client only (server must be running)
 echo.
 exit /b 0
 
+:env_check
 REM ============================================================
 REM ПРОВЕРКА ОКРУЖЕНИЯ
 REM ============================================================
@@ -119,7 +91,7 @@ if errorlevel 1 (
     echo Please install Node.js 20+ from https://nodejs.org/
     exit /b 1
 )
-for /f "tokens=2 delims=v" %%v in ('node --version') do set NODE_VER=%%v
+for /f %%v in ('node -p "process.version"') do set NODE_VER=%%v
 for /f "tokens=1 delims=." %%m in ("%NODE_VER%") do set NODE_MAJOR=%%m
 if %NODE_MAJOR% LSS 20 (
     call :log_warn "Node.js version %NODE_VER% < 20 (recommended 20+)"
@@ -152,56 +124,15 @@ REM Создание папки логов
 if not exist "%LOG_DIR%" mkdir "%LOG_DIR%" >nul 2>&1
 
 REM ============================================================
-РЕЖИМ PRODUCTION: СБОРКА
+REM РЕЖИМ PRODUCTION: СБОРКА
 REM ============================================================
 if /i "%MODE%"=="prod" (
     call :log_step "Production Build"
-    
-    REM Server build
-    call :log_info "Building server..."
-    cd /d "%SERVER_DIR%"
-    if not exist "node_modules" (
-        call :log_info "Installing server dependencies..."
-        npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
-        if errorlevel 1 call :log_fail "Server npm ci failed" & exit /b 1
-    )
-    npm run build 2>&1 | findstr /v /c:"npm notice"
-    if errorlevel 1 call :log_fail "Server build failed" & exit /b 1
-    call :log_success "Server built"
-    
-    REM Client build
-    call :log_info "Building client..."
-    cd /d "%CLIENT_DIR%"
-    if not exist "node_modules" (
-        call :log_info "Installing client dependencies..."
-        npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
-        if errorlevel 1 call :log_fail "Client npm ci failed" & exit /b 1
-    )
-    npm run make 2>&1 | findstr /v /c:"npm notice"
-    if errorlevel 1 call :log_fail "Client build failed" & exit /b 1
-    call :log_success "Client built"
-    
-    REM Bot build
-    if exist "%BOT_DIR%package.json" (
-        call :log_info "Building bot..."
-        cd /d "%BOT_DIR%"
-        if not exist "node_modules" npm ci --prefer-offline --no-audit --no-fund >nul 2>&1
-        npm run build 2>&1 | findstr /v /c:"npm notice"
-        if errorlevel 1 call :log_warn "Bot build failed (non-fatal)"
-        else call :log_success "Bot built"
-    )
-    
-    call :log_success "Production build complete"
-    echo.
-    echo Artifacts:
-    echo   Server: %SERVER_DIR%dist\
-    echo   Client: %CLIENT_DIR%out\make\
-    echo   Bot:    %BOT_DIR%dist\
-    echo.
+    call :log_success "No build needed (tsx runs TypeScript directly)"
 )
 
 REM ============================================================
-ПРОВЕРКА ЗАВИСИМОСТЕЙ
+REM ПРОВЕРКА ЗАВИСИМОСТЕЙ
 REM ============================================================
 if /i "%SKIP_DEPS%"=="true" goto :deps_done
 if /i "%MODE%"=="prod" goto :deps_done
@@ -243,7 +174,7 @@ call :log_success "Dependencies ready"
 :deps_done
 
 REM ============================================================
-ПРОВЕРКА БАЗЫ ДАННЫХ
+REM ПРОВЕРКА БАЗЫ ДАННЫХ
 REM ============================================================
 if /i "%SKIP_DB_CHECK%"=="false" (
     call :log_step "Database Check"
@@ -280,7 +211,7 @@ if /i "%SKIP_DB_CHECK%"=="false" (
 )
 
 REM ============================================================
-ПРОВЕРКА КОНФИГУРАЦИИ
+REM ПРОВЕРКА КОНФИГУРАЦИИ
 REM ============================================================
 call :log_step "Configuration Check"
 
@@ -313,7 +244,7 @@ if exist "%SERVER_DIR%.env" (
 )
 
 REM ============================================================
-ЗАПУСК СЕРВЕРА
+REM ЗАПУСК СЕРВЕРА
 REM ============================================================
 if /i "%ONLY_CLIENT%"=="false" (
     call :log_step "Starting Server"
@@ -325,11 +256,7 @@ if /i "%ONLY_CLIENT%"=="false" (
     set SERVER_ERR_LOG=%LOG_DIR%server.err.log
     
     if /i "%MODE%"=="prod" (
-        set SERVER_CMD=node dist/HelperDesktop.server/src/index.js
-        if not exist "dist/HelperDesktop.server/src/index.js" (
-            call :log_error "Server not built. Run: start.bat --prod"
-            exit /b 1
-        )
+        set SERVER_CMD=npx tsx src/index.ts
     )
     
     call :log_info "Command: %SERVER_CMD%"
@@ -365,7 +292,7 @@ if /i "%ONLY_CLIENT%"=="false" (
 )
 
 REM ============================================================
-ЗАПУСК КЛИЕНТА
+REM ЗАПУСК КЛИЕНТА
 REM ============================================================
 if /i "%ONLY_SERVER%"=="false" (
     call :log_step "Starting Client"
@@ -392,7 +319,7 @@ if /i "%ONLY_SERVER%"=="false" (
 )
 
 REM ============================================================
-ИТОГ
+REM ИТОГ
 REM ============================================================
 call :log_step "Summary"
 echo.
@@ -425,3 +352,35 @@ if /i "%MODE%"=="dev" (
 
 endlocal
 exit /b 0
+
+REM ============================================================
+REM ФУНКЦИИ (must be at end of file)
+REM ============================================================
+:log_info
+echo %GREEN%[INFO]%RESET% %*
+goto :eof
+
+:log_warn
+echo %YELLOW%[WARN]%RESET% %*
+goto :eof
+
+:log_error
+echo %RED%[ERROR]%RESET% %*
+goto :eof
+
+:log_debug
+echo %GRAY%[DEBUG]%RESET% %*
+goto :eof
+
+:log_step
+echo.
+echo %CYAN%%BOLD%=== %* ===%RESET%
+goto :eof
+
+:log_success
+echo %GREEN%[OK]%RESET% %*
+goto :eof
+
+:log_fail
+echo %RED%[FAIL]%RESET% %*
+goto :eof
