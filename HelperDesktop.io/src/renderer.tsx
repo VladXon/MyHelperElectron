@@ -17,9 +17,3 @@ root.render(
     </ErrorBoundary>
   </StrictMode>,
 );
-
-if (import.meta.env.DEV) {
-  import('react-scan').then(({ scan }) => {
-    scan({ enabled: true, log: true });
-  });
-}
