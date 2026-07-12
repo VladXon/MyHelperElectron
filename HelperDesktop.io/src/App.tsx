@@ -266,7 +266,7 @@ function AppContent() {
           onEditPreset={handleEditPreset}
         />
         <main className="content content-relative">
-          <AnimatePresence mode="wait">
+          <AnimatePresence>
             {renderPage()}
           </AnimatePresence>
         </main>

@@ -82,9 +82,10 @@ export default function NotesPage() {
       key={note.id}
       className={`note-card ${note.completed ? 'completed' : ''}`}
       layout
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 28 }}
     >
       <button className="note-check" onClick={() => handleToggle(note.id, 'completed')} title={note.completed ? 'Вернуть' : 'Выполнено'}>
         {note.completed ? <Check size={16} /> : <Circle size={16} />}

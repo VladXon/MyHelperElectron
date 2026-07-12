@@ -149,7 +149,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
                       onClick={() => handleBrowse(idx)}
                       disabled={saving}
                       title="Обзор"
-                      whileTap={{ scale: 0.9 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       <FolderOpen size={14} />
                     </motion.button>
@@ -173,7 +173,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
                   onClick={() => handleRemoveApp(idx)}
                   disabled={saving || apps.length <= 1}
                   title="Удалить"
-                  whileTap={{ scale: 0.9 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <Trash size={14} />
                 </motion.button>

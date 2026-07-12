@@ -72,7 +72,7 @@ export default function Sidebar({
             onClick={() => onSelect(item.id)}
             aria-current={active === item.id ? 'page' : undefined}
             whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.1 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           >
             <span className="sidebar-item-icon">{iconMap[item.id]}</span>
             <span className="sidebar-item-label">{item.label}</span>
@@ -93,7 +93,7 @@ export default function Sidebar({
                   onClick={() => onLaunchPreset(p.id)}
                   title={`Запустить ${p.name}`}
                   whileTap={{ scale: 0.97 }}
-                  transition={{ duration: 0.1 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 >
                   <span className="sidebar-item-icon">{p.icon}</span>
                   <span className="sidebar-item-label">{p.name}</span>

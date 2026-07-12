@@ -87,15 +87,18 @@ body {
   height: 100vh;
   gap: 20px;
   color: var(--text-secondary);
+  animation: fadeIn 400ms ease;
 }
 
 .loading-spinner {
-  width: 36px;
-  height: 36px;
-  border: 2.5px solid var(--border);
+  width: 32px;
+  height: 32px;
+  border: 2px solid transparent;
   border-top-color: var(--accent);
+  border-right-color: var(--accent);
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  animation: spin 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 6px var(--accent-glow));
 }
 
 @keyframes spin {

@@ -61,7 +61,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
           className={`preset-card-btn preset-card-pin${preset.pinned ? ' pinned' : ''}`}
           onClick={() => onTogglePin(preset.id)}
           title={preset.pinned ? 'Открепить' : 'Закрепить'}
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
         >
           <PushPin size={14} weight={preset.pinned ? 'fill' : 'regular'} />
         </motion.button>
@@ -69,7 +69,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
           className="preset-card-btn preset-card-edit"
           onClick={() => onEdit(preset.id)}
           title="Редактировать"
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
         >
           <PencilSimple size={14} />
         </motion.button>
@@ -77,7 +77,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
           className={`preset-card-btn preset-card-delete${confirmDelete === preset.id ? ' confirming' : ''}`}
           onClick={() => handleDelete(preset.id)}
           title={confirmDelete === preset.id ? 'Подтвердить' : 'Удалить'}
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
         >
           {confirmDelete === preset.id ? (
             <Check size={14} />
@@ -89,7 +89,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
           className="preset-card-btn preset-card-launch"
           onClick={() => onLaunch(preset.id)}
           title="Запустить"
-          whileTap={{ scale: 0.9 }}
+          whileTap={{ scale: 0.95 }}
         >
           <Play size={14} weight="fill" />
         </motion.button>
