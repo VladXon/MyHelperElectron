@@ -15,6 +15,7 @@ set CLIENT_DIR=%PROJECT_ROOT%HelperDesktop.io
 set BOT_DIR=%PROJECT_ROOT%HelperDesktop.telegram
 set LOG_DIR=%PROJECT_ROOT%logs
 set DB_FILE=%SERVER_DIR%helperdesktop.db
+set MODE=prod
 
 REM --- Цвета для вывода ---
 for /f %%a in ('echo prompt $E ^| cmd') do set "ESC=%%a"
@@ -61,7 +62,6 @@ goto :eof
 REM ============================================================
 REM ПАРСИНГ АРГУМЕНТОВ
 REM ============================================================
-set MODE=dev
 set SKIP_DEPS=false
 set SKIP_DB_CHECK=false
 set ONLY_SERVER=false
@@ -198,48 +198,49 @@ if /i "%MODE%"=="prod" (
     echo   Client: %CLIENT_DIR%out\make\
     echo   Bot:    %BOT_DIR%dist\
     echo.
-    echo To run: start.bat --prod --skip-deps
-    exit /b 0
 )
 
 REM ============================================================
-РЕЖИМ DEV: ПРОВЕРКА ЗАВИСИМОСТЕЙ
+ПРОВЕРКА ЗАВИСИМОСТЕЙ
 REM ============================================================
-if /i "%SKIP_DEPS%"=="false" (
-    call :log_step "Dependency Check"
-    
-    REM Server deps
-    cd /d "%SERVER_DIR%"
-    if not exist "node_modules" (
-        call :log_info "Installing server dependencies..."
-        npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
-        if errorlevel 1 call :log_fail "Server npm ci failed" & exit /b 1
-    ) else (
-        call :log_debug "Server node_modules exists, skipping install"
-    )
-    
-    REM Client deps
-    cd /d "%CLIENT_DIR%"
-    if not exist "node_modules" (
-        call :log_info "Installing client dependencies..."
-        npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
-        if errorlevel 1 call :log_fail "Client npm ci failed" & exit /b 1
-    ) else (
-        call :log_debug "Client node_modules exists, skipping install"
-    )
-    
-    REM Bot deps
-    if exist "%BOT_DIR%package.json" (
-        cd /d "%BOT_DIR%"
-        if not exist "node_modules" (
-            call :log_info "Installing bot dependencies..."
-            npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
-            if errorlevel 1 call :log_warn "Bot npm ci failed (non-fatal)"
-        )
-    )
-    
-    call :log_success "Dependencies ready"
+if /i "%SKIP_DEPS%"=="true" goto :deps_done
+if /i "%MODE%"=="prod" goto :deps_done
+
+call :log_step "Dependency Check"
+
+REM Server deps
+cd /d "%SERVER_DIR%"
+if not exist "node_modules" (
+    call :log_info "Installing server dependencies..."
+    npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
+    if errorlevel 1 call :log_fail "Server npm ci failed" & exit /b 1
+) else (
+    call :log_debug "Server node_modules exists, skipping install"
 )
+
+REM Client deps
+cd /d "%CLIENT_DIR%"
+if not exist "node_modules" (
+    call :log_info "Installing client dependencies..."
+    npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
+    if errorlevel 1 call :log_fail "Client npm ci failed" & exit /b 1
+) else (
+    call :log_debug "Client node_modules exists, skipping install"
+)
+
+REM Bot deps
+if exist "%BOT_DIR%package.json" (
+    cd /d "%BOT_DIR%"
+    if not exist "node_modules" (
+        call :log_info "Installing bot dependencies..."
+        npm ci --prefer-offline --no-audit --no-fund 2>&1 | findstr /v /c:"npm notice" /c:"added" /c:"audit" /c:"fund"
+        if errorlevel 1 call :log_warn "Bot npm ci failed (non-fatal)"
+    )
+)
+
+call :log_success "Dependencies ready"
+
+:deps_done
 
 REM ============================================================
 ПРОВЕРКА БАЗЫ ДАННЫХ
@@ -375,17 +376,7 @@ if /i "%ONLY_SERVER%"=="false" (
     set CLIENT_LOG=%LOG_DIR%client.log
     
     if /i "%MODE%"=="prod" (
-        REM В проде ищем собранный .exe
-        for /r "out" %%f in (*.exe) do (
-            if not "%%~nf"=="Uninstall*" set CLIENT_EXE=%%f
-        )
-        if defined CLIENT_EXE (
-            set CLIENT_CMD="%CLIENT_EXE%"
-            call :log_info "Running built app: %CLIENT_EXE%"
-        ) else (
-            call :log_error "No built executable found. Run: start.bat --prod"
-            exit /b 1
-        )
+        set CLIENT_CMD=npm run start
     )
     
     call :log_info "Command: %CLIENT_CMD%"
