@@ -228,7 +228,7 @@ function AppContent() {
   const renderPage = () => {
     if (activePage === 'presets') {
       return (
-        <Suspense fallback={<div className="loading-spinner" />}>
+        <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}><div className="loading-spinner" /></div>}>
           <PresetsPage
             key="presets"
             presets={presets}
@@ -242,7 +242,7 @@ function AppContent() {
       );
     }
     return (
-      <Suspense fallback={<div className="loading-spinner" />}>
+      <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}><div className="loading-spinner" /></div>}>
         {PageComponent ? <PageComponent key={activePage} /> : <SettingsPage key="settings" />}
       </Suspense>
     );
