@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, PushPin, PushPinSlash, Check, Circle, Clock, Tag, Trash, PencilSimple, X, Notebook } from '@phosphor-icons/react';
+import { useAuth } from '../AuthContext';
 import NoteEditModal from './NoteEditModal';
 
 interface Note {
@@ -17,6 +18,7 @@ interface Note {
 }
 
 export default function NotesPage() {
+  const { user } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -24,9 +26,10 @@ export default function NotesPage() {
   const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
 
   const loadNotes = useCallback(async () => {
+    if (!user) return;
     const data = await window.electronNotes.getAll();
     setNotes(data);
-  }, []);
+  }, [user]);
 
   useEffect(() => { loadNotes(); }, [loadNotes]);
 
@@ -125,6 +128,12 @@ export default function NotesPage() {
 
   return (
     <motion.div className="notes-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      {!user ? (
+        <div className="notes-empty">
+          <Notebook size={48} />
+          <p>Войдите для просмотра заметок</p>
+        </div>
+      ) : (<>
       <div className="notes-header">
         <h2>Заметки</h2>
         <button className="btn-primary" onClick={handleCreate}><Plus size={16} /> Новая</button>
@@ -149,6 +158,7 @@ export default function NotesPage() {
       <AnimatePresence>
         {showModal && <NoteEditModal note={editNote} onSave={handleSave} onClose={() => setShowModal(false)} />}
       </AnimatePresence>
+      </>)}
     </motion.div>
   );
 }
