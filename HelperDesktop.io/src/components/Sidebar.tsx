@@ -1,0 +1,198 @@
+import { useState, useRef, useEffect, type ReactNode } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { SquaresFour, Gear, Notebook, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
+import { useAuth } from '../AuthContext';
+
+const iconMap: Record<string, ReactNode> = {
+  presets: <SquaresFour size={20} />,
+  notes: <Notebook size={20} />,
+  settings: <Gear size={20} />,
+};
+
+interface SidebarItem {
+  id: string;
+  label: string;
+}
+
+interface SidebarPreset {
+  id: string;
+  name: string;
+  icon: string;
+}
+
+interface SidebarProps {
+  pages: SidebarItem[];
+  active: string;
+  onSelect: (id: string) => void;
+  onLoginClick: () => void;
+  onAddAccount?: () => void;
+  pinnedPresets: SidebarPreset[];
+  onLaunchPreset: (id: string) => void;
+  onEditPreset: (id: string) => void;
+}
+
+export default function Sidebar({
+  pages, active, onSelect, onLoginClick, onAddAccount,
+  pinnedPresets, onLaunchPreset, onEditPreset,
+}: SidebarProps) {
+  const { user, isDev, logout, accounts, activeAccount, switchAccount, removeAccount } = useAuth();
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowAccountMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSwitchAccount = async (login: string) => {
+    if (login !== activeAccount) {
+      await switchAccount(login);
+    }
+    setShowAccountMenu(false);
+  };
+
+  const handleRemoveAccount = async (e: React.MouseEvent, login: string) => {
+    e.stopPropagation();
+    if (accounts.length <= 1) return;
+    await removeAccount(login);
+  };
+
+  return (
+    <aside className="sidebar">
+      <nav className="sidebar-nav">
+        {pages.map(item => (
+          <motion.button
+            key={item.id}
+            className={`sidebar-item ${active === item.id ? 'active' : ''}`}
+            onClick={() => onSelect(item.id)}
+            aria-current={active === item.id ? 'page' : undefined}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.1 }}
+          >
+            <span className="sidebar-item-icon">{iconMap[item.id]}</span>
+            <span className="sidebar-item-label">{item.label}</span>
+          </motion.button>
+        ))}
+
+        <div className="sidebar-divider" />
+
+        {pinnedPresets.length > 0 && (
+          <>
+            <div className="sidebar-section-header">
+              <span className="sidebar-section-label">Закреплённые</span>
+            </div>
+            {pinnedPresets.map(p => (
+              <div className="sidebar-preset-row" key={p.id}>
+                <motion.button
+                  className="sidebar-item sidebar-preset-item"
+                  onClick={() => onLaunchPreset(p.id)}
+                  title={`Запустить ${p.name}`}
+                  whileTap={{ scale: 0.97 }}
+                  transition={{ duration: 0.1 }}
+                >
+                  <span className="sidebar-item-icon">{p.icon}</span>
+                  <span className="sidebar-item-label">{p.name}</span>
+                </motion.button>
+                <button
+                  className="sidebar-preset-edit"
+                  onClick={() => onEditPreset(p.id)}
+                  title="Редактировать"
+                >
+                  <PencilSimple size={12} />
+                </button>
+              </div>
+            ))}
+          </>
+        )}
+      </nav>
+
+      <div className="sidebar-bottom" ref={menuRef}>
+        <div className="user-row">
+          <div className="user-avatar-ring">
+            <div className="user-avatar">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 8C9.933 8 11.5 6.433 11.5 4.5C11.5 2.567 9.933 1 8 1C6.067 1 4.5 2.567 4.5 4.5C4.5 6.433 6.067 8 8 8Z" fill="currentColor"/>
+                <path d="M14 15C14 11.686 11.314 9 8 9C4.686 9 2 11.686 2 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
+              </svg>
+            </div>
+          </div>
+          <div className="user-meta">
+            {user ? (
+              <>
+                <div className="user-badge-row">
+                  <button
+                    className="user-greeting account-switch-btn"
+                    onClick={() => setShowAccountMenu(!showAccountMenu)}
+                    title="Выбрать аккаунт"
+                  >
+                    {user.name}
+                  </button>
+                  {isDev && <span className="dev-badge">dev</span>}
+                </div>
+                <button className="user-login-link" onClick={logout}>
+                  Выйти
+                </button>
+              </>
+            ) : (
+              <>
+                <span className="user-greeting">Гость</span>
+                <button className="user-login-link" onClick={onLoginClick}>
+                  Войти
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {showAccountMenu && user && (
+            <motion.div
+              className="account-menu"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.15 }}
+            >
+              {accounts.map(acct => (
+                <button
+                  key={acct.login}
+                  className={`account-menu-item ${acct.login === activeAccount ? 'active' : ''}`}
+                  onClick={() => handleSwitchAccount(acct.login)}
+                >
+                  <span className="account-menu-login">{acct.login}</span>
+                  {acct.login === activeAccount && <span className="account-menu-check">✓</span>}
+                  {accounts.length > 1 && (
+                    <button
+                      className="account-menu-remove"
+                      onClick={(e) => handleRemoveAccount(e, acct.login)}
+                      title="Удалить аккаунт"
+                    >
+                      <Trash size={12} />
+                    </button>
+                  )}
+                </button>
+              ))}
+              {onAddAccount && (
+                <button
+                  className="account-menu-item account-menu-add"
+                  onClick={() => {
+                    setShowAccountMenu(false);
+                    onAddAccount();
+                  }}
+                >
+                  <Plus size={14} />
+                  <span>Добавить аккаунт</span>
+                </button>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </aside>
+  );
+}
