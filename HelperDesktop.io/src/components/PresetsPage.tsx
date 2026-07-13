@@ -45,53 +45,56 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
     >
-      <div className="preset-card-icon-wrap">
-        {preset.icon ? (
-          <span>{preset.icon}</span>
-        ) : (
-          <PackageIcon size={22} />
-        )}
-      </div>
-      <div className="preset-card-body">
-        <div className="preset-card-name">{preset.name}</div>
-        <div className="preset-card-meta">{preset.apps.length} прил.</div>
-      </div>
-      <div className="preset-card-actions">
-        <motion.button
-          className={`preset-card-btn preset-card-pin${preset.pinned ? ' pinned' : ''}`}
-          onClick={() => onTogglePin(preset.id)}
-          title={preset.pinned ? 'Открепить' : 'Закрепить'}
-          whileTap={{ scale: 0.95 }}
-        >
-          <PushPin size={14} weight={preset.pinned ? 'fill' : 'regular'} />
-        </motion.button>
-        <motion.button
-          className="preset-card-btn preset-card-edit"
-          onClick={() => onEdit(preset.id)}
-          title="Редактировать"
-          whileTap={{ scale: 0.95 }}
-        >
-          <PencilSimple size={14} />
-        </motion.button>
-        <motion.button
-          className={`preset-card-btn preset-card-delete${confirmDelete === preset.id ? ' confirming' : ''}`}
-          onClick={() => handleDelete(preset.id)}
-          title={confirmDelete === preset.id ? 'Подтвердить' : 'Удалить'}
-          whileTap={{ scale: 0.95 }}
-        >
-          {confirmDelete === preset.id ? (
-            <Check size={14} />
+      <div className="preset-card-header">
+        <div className="preset-card-icon">
+          {preset.icon ? (
+            <span>{preset.icon}</span>
           ) : (
-            <Trash size={14} />
+            <span className="material-symbols-outlined">package</span>
           )}
-        </motion.button>
+        </div>
+        <span className="badge badge-ready">Ready</span>
+      </div>
+      <h4 className="preset-card-title">{preset.name}</h4>
+      <p className="preset-card-description">{preset.apps.length} приложений</p>
+      <div className="preset-card-footer">
+        <div className="preset-card-actions">
+          <motion.button
+            className={`preset-card-btn preset-card-pin${preset.pinned ? ' pinned' : ''}`}
+            onClick={() => onTogglePin(preset.id)}
+            title={preset.pinned ? 'Открепить' : 'Закрепить'}
+            whileTap={{ scale: 0.95 }}
+          >
+            <PushPin size={14} weight={preset.pinned ? 'fill' : 'regular'} />
+          </motion.button>
+          <motion.button
+            className="preset-card-btn preset-card-edit"
+            onClick={() => onEdit(preset.id)}
+            title="Редактировать"
+            whileTap={{ scale: 0.95 }}
+          >
+            <PencilSimple size={14} />
+          </motion.button>
+          <motion.button
+            className={`preset-card-btn preset-card-delete${confirmDelete === preset.id ? ' confirming' : ''}`}
+            onClick={() => handleDelete(preset.id)}
+            title={confirmDelete === preset.id ? 'Подтвердить' : 'Удалить'}
+            whileTap={{ scale: 0.95 }}
+          >
+            {confirmDelete === preset.id ? (
+              <Check size={14} />
+            ) : (
+              <Trash size={14} />
+            )}
+          </motion.button>
+        </div>
         <motion.button
-          className="preset-card-btn preset-card-launch"
+          className="preset-card-launch"
           onClick={() => onLaunch(preset.id)}
           title="Запустить"
           whileTap={{ scale: 0.95 }}
         >
-          <Play size={14} weight="fill" />
+          Launch <span className="material-symbols-outlined">arrow_forward</span>
         </motion.button>
       </div>
     </motion.div>
@@ -105,25 +108,36 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="presets-page-header">
-        <h1 className="settings-title">Пресеты</h1>
+      <nav className="presets-breadcrumb">
+        <span>Library</span>
+        <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>chevron_right</span>
+        <span className="presets-breadcrumb-active">Presets</span>
+      </nav>
+
+      <header className="presets-page-header">
+        <div>
+          <h1 className="presets-title">Available Presets</h1>
+          <p className="presets-description">
+            Quickly switch between your specialized environments. Each preset restores your windows, tools, and system preferences instantly.
+          </p>
+        </div>
         <motion.button
-          className="settings-btn settings-btn-primary"
+          className="btn-primary"
           onClick={onAdd}
           whileTap={{ scale: 0.97 }}
         >
           + Создать
         </motion.button>
-      </div>
+      </header>
 
       <div className="presets-search-wrap">
-        <MagnifyingGlass className="presets-search-icon" size={14} />
+        <span className="material-symbols-outlined presets-search-icon">search</span>
         <input
           className="presets-search"
           type="text"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Поиск пресетов..."
+          placeholder="Search presets..."
           autoFocus
         />
         {search && (
@@ -142,7 +156,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
       {presets.length === 0 ? (
         <div className="presets-empty">
           <div className="presets-empty-icon">
-            <Package size={48} style={{ opacity: 0.4 }} />
+            <span className="material-symbols-outlined" style={{ fontSize: '48px', opacity: 0.4 }}>package</span>
           </div>
           <p className="presets-empty-text">Нет пресетов</p>
           <p className="presets-empty-hint">Создайте первый пресет, чтобы быстро запускать приложения</p>
@@ -178,7 +192,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
               animate={{ opacity: 1 }}
             >
               <div className="presets-empty-icon">
-                <MagnifyingGlass size={48} style={{ opacity: 0.4 }} />
+                <span className="material-symbols-outlined" style={{ fontSize: '48px', opacity: 0.4 }}>search</span>
               </div>
               <p className="presets-empty-text">Ничего не найдено</p>
               <p className="presets-empty-hint">Попробуйте изменить запрос</p>
