@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.vite/
+out/
+*.db
+*.db-wal
+*.db-shm
+.env
+.env.local
+*.log
+
+# Electron
+HelperDesktop.io/.vite/
+HelperDesktop.io/out/
+HelperDesktop.server/dist/
+
+# Dependencies
+HelperDesktop.io/node_modules/
+HelperDesktop.server/node_modules/
+HelperDesktop.telegram/node_modules/
+shared/node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenCode
+.opencode/

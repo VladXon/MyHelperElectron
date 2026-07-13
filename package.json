@@ -1,0 +1,10 @@
+{
+  "name": "helperdesktop-monorepo",
+  "private": true,
+  "scripts": {
+    "test": "cd HelperDesktop.server && npm test",
+    "test:e2e": "cd HelperDesktop.server && npm run test:e2e",
+    "typecheck": "cd HelperDesktop.server && npx tsc --noEmit",
+    "ci": "npm run typecheck && npm run test"
+  }
+}

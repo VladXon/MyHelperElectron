@@ -1,0 +1,61 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+
+  "shell": "pwsh",
+
+  "mcp": {
+    "stitch": {
+      "type": "remote",
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "AQ.Ab8RN6IESgqVfN4W02FUMdvFGHWCYna4C3gYZLZc1BQ7wCTRmQ"
+      },
+      "enabled": false
+    }
+  },
+
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers",
+    "opencode-pty",
+    "opencode-notificator"
+  ],
+
+  "lsp": true,
+
+  "formatter": {
+    "prettier": {
+      "disabled": false
+    }
+  },
+
+  "instructions": [
+    "AGENTS.md"
+  ],
+
+  "watcher": {
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      ".git/**",
+      "release/**",
+      "*.db",
+      "*.db-journal"
+    ]
+  },
+
+  "permission": {
+    "bash": "allow",
+    "write": "allow",
+    "edit": "allow"
+  },
+
+  "autoupdate": true,
+
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 8000
+  }
+}

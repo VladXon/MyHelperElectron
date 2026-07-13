@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pro Studio | Workspace Presets</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#ffdcbb",
+                    "tertiary-container": "#ca801e",
+                    "error": "#ffb4ab",
+                    "on-error-container": "#ffdad6",
+                    "inverse-surface": "#e4e1ec",
+                    "secondary-container": "#444173",
+                    "inverse-on-surface": "#303038",
+                    "surface-tint": "#d0bcff",
+                    "inverse-primary": "#6d3bd7",
+                    "surface-container-low": "#1b1b22",
+                    "primary-fixed-dim": "#d0bcff",
+                    "on-secondary-fixed-variant": "#444173",
+                    "primary-fixed": "#e9ddff",
+                    "on-secondary-container": "#b3afe9",
+                    "on-surface-variant": "#cbc3d7",
+                    "on-primary-container": "#340080",
+                    "background": "#08080a", /* Darker background for higher contrast */
+                    "on-primary-fixed-variant": "#5516be",
+                    "on-tertiary-container": "#3f2300",
+                    "surface-container-high": "#2a2931",
+                    "secondary": "#c4c1fb",
+                    "surface-variant": "#34343c",
+                    "on-surface": "#ffffff", /* Sharper text */
+                    "primary-container": "#a078ff",
+                    "on-background": "#e4e1ec",
+                    "primary": "#d0bcff",
+                    "secondary-fixed": "#e3dfff",
+                    "tertiary-fixed-dim": "#ffb869",
+                    "surface-container": "#14141a",
+                    "error-container": "#93000a",
+                    "on-primary-fixed": "#23005c",
+                    "on-secondary": "#2d2a5b",
+                    "on-primary": "#3c0091",
+                    "surface-bright": "#393841",
+                    "tertiary": "#ffb869",
+                    "surface": "#08080a",
+                    "on-tertiary": "#482900",
+                    "secondary-fixed-dim": "#c4c1fb",
+                    "surface-container-lowest": "#050508",
+                    "outline-variant": "#2a2a30",
+                    "on-secondary-fixed": "#181445",
+                    "on-tertiary-fixed": "#2c1700",
+                    "outline": "#40404a",
+                    "on-error": "#690005",
+                    "surface-container-highest": "#34343c",
+                    "on-tertiary-fixed-variant": "#673d00",
+                    "surface-dim": "#08080a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "gutter": "32px", /* Increased whitespace */
+                    "base": "4px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "lg": "24px",
+                    "xl": "48px",
+                    "margin": "48px" /* Increased margin */
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "500"}],
+                    "headline-md": ["22px", {"lineHeight": "30px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #08080a;
+            color: #e4e1ec;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .minimal-card {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .minimal-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(208, 188, 255, 0.3);
+    box-shadow: 0 12px 40px -12px rgba(208, 188, 255, 0.15);
+  }
+  .icon-glow {
+    position: relative;
+  }
+  .icon-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    filter: blur(15px);
+    opacity: 0.1;
+    border-radius: inherit;
+  }
+</style></head>
+<body class="h-screen w-screen flex overflow-hidden">
+<!-- SIDEBAR -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-lg bg-surface h-screen w-64 border-r border-white/[0.06] z-50">
+<div class="flex items-center gap-md mb-xl">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-xl">layers</span>
+</div>
+<div>
+<h1 class="font-headline-md text-[18px] font-bold text-on-surface tracking-tight">Pro Studio</h1>
+<p class="font-label-md text-[10px] text-on-surface-variant opacity-50 uppercase tracking-widest">Workstation</p>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-xs">
+<a class="flex items-center gap-md px-md py-sm text-primary font-medium bg-white/[0.03] rounded transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span class="font-body-md text-body-md">Presets</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant/70 hover:text-on-surface hover:bg-white/[0.03] transition-all duration-200 rounded" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="font-body-md text-body-md">Notes</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant/70 hover:text-on-surface hover:bg-white/[0.03] transition-all duration-200 rounded" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto">
+<div class="p-md rounded border border-white/[0.06] mb-lg bg-white/[0.02]">
+<div class="flex items-center gap-sm mb-xs">
+<div class="w-1.5 h-1.5 rounded-full bg-primary/60"></div>
+<span class="font-label-md text-[11px] text-on-surface-variant">SYSTEM STATUS</span>
+</div>
+<p class="font-label-md text-[11px] text-on-surface font-medium">CPU: 12% | RAM: 4.2GB</p>
+</div>
+<button class="w-full py-sm border border-primary/40 text-primary hover:bg-primary/10 transition-all duration-200 text-sm font-medium rounded flex items-center justify-center gap-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>New Project</span>
+</button>
+</div>
+</aside>
+<!-- MAIN CONTENT AREA -->
+<main class="flex-1 ml-64 flex flex-col h-full bg-background relative">
+<!-- TOP BAR -->
+<header class="flex items-center justify-between px-margin w-full sticky top-0 z-40 h-20 border-b border-white/[0.06]">
+<div class="flex items-center flex-1">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface mr-xl">Studio Workspace</h2>
+<div class="relative w-80 max-w-full">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-sm">search</span>
+<input class="w-full bg-white/[0.03] border border-white/[0.06] focus:ring-1 focus:ring-primary/40 focus:border-primary/40 text-on-surface font-body-md text-body-md py-sm pl-xl rounded placeholder:text-on-surface-variant/30" placeholder="Search presets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="px-lg py-sm bg-white text-black hover:bg-white/90 transition-colors rounded text-sm font-semibold">
+                Create
+            </button>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant/60 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-2xl">notifications</span>
+</button>
+<button class="text-on-surface-variant/60 hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-2xl text-primary">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- CONTENT SCROLL -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-margin">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-xs mb-lg text-on-surface-variant/40 font-label-md text-label-md uppercase tracking-widest">
+<span>Library</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-on-surface-variant/80">Presets</span>
+</nav>
+<header class="mb-xl">
+<h3 class="font-headline-lg text-headline-lg mb-md text-on-surface">Available Presets</h3>
+<p class="font-body-md text-body-md text-on-surface-variant/60 max-w-2xl leading-relaxed">Quickly switch between your specialized environments. Each preset restores your windows, tools, and system preferences instantly.</p>
+</header>
+<!-- MINIMAL GRID -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Card 1: Development -->
+<div class="glass-card p-xl rounded-xl flex flex-col group h-[340px] relative overflow-hidden">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center icon-glow text-primary">
+<span class="material-symbols-outlined text-2xl">code</span>
+</div>
+<span class="text-[10px] font-bold text-primary uppercase tracking-[0.15em] bg-primary/10 px-2.5 py-1 rounded-full">Ready</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-on-surface mb-2 group-hover:text-primary transition-colors">Development</h4>
+<p class="font-body-md text-sm text-on-surface-variant/60 leading-relaxed mb-xl line-clamp-3">VS Code, Terminal, Docker, and Browser stack pre-configured for full-stack workflows.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full border-2 border-background bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJAaRits_YdTFP37S1Ky9EmkcSiZdfEih5ydP2Krgi5wr1r0QTiI270M3a07DWBUGtvhxAVo2lfwNWdhQiNRsmCAbCgtKzj59uysXEVNE32mE1BIw4T5IFVpRxyhu8KflDvkSkyEP1vaj4DA-oZTBdj9kitnajagDmTAdC_DSWccCQ10fTCEtmEVZLLQVKxlrjTL6yc-5EwMuSaOtVHbmGiC6FNxM-bMvAlc9V3lVqzI6ho8dRz5c4MXof7ITF2aSIQ2FVtlJytBA"/>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-background bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClijMBL93V1vhDKtQx1coi7J8REri0nv2gjmr5TeGvWn9-z-3xBpE422AsKq32VBhSTBYS_A7vK2lSoNmNVHFqbcSrFngWlhbkAgfO30VesUylbterNaGu70H5kNUAaf5PI3fpqGmFturuREkDnv1T9rhFLwS9wCl3B_2d1dMQf01SO6XB25h36AYC4H19S6-sn3Gpl0CjKqXNXWg-e1mGOD5_rccfbnA7FQWyM7o8eN5z_ViB6DZA9zJQW-BAO8HSbLZFZVZUfS8"/>
+</div>
+</div>
+<button class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/40 group-hover:text-primary transition-all">
+      Launch <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Creative Design -->
+<div class="glass-card p-xl rounded-xl flex flex-col group h-[340px] relative overflow-hidden">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center icon-glow text-tertiary">
+<span class="material-symbols-outlined text-2xl">palette</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-[0.15em] border border-white/10 px-2.5 py-1 rounded-full">Idle</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-on-surface mb-2 group-hover:text-tertiary transition-colors">Creative Design</h4>
+<p class="font-body-md text-sm text-on-surface-variant/60 leading-relaxed mb-xl line-clamp-3">Adobe Suite, Figma, and color management tools for professional high-fidelity UI/UX design.</p>
+<div class="mt-auto flex justify-end">
+<button class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/40 group-hover:text-tertiary transition-all">
+      Launch <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Pro Gaming -->
+<div class="glass-card p-xl rounded-xl flex flex-col group h-[340px] relative overflow-hidden">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center icon-glow text-error">
+<span class="material-symbols-outlined text-2xl">sports_esports</span>
+</div>
+<span class="text-[10px] font-bold text-error uppercase tracking-[0.15em] bg-error/10 px-2.5 py-1 rounded-full">High Power</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-on-surface mb-2 group-hover:text-error transition-colors">Pro Gaming</h4>
+<p class="font-body-md text-sm text-on-surface-variant/60 leading-relaxed mb-xl line-clamp-3">GPU overclocking, latency optimization, and streaming software priority initialization.</p>
+<div class="mt-auto flex justify-end">
+<button class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/40 group-hover:text-error transition-all">
+      Launch <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 4: Audio Engineering -->
+<div class="glass-card p-xl rounded-xl flex flex-col group h-[340px] relative overflow-hidden">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center icon-glow text-primary">
+<span class="material-symbols-outlined text-2xl">graphic_eq</span>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-[0.15em] border border-white/10 px-2.5 py-1 rounded-full">Idle</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-on-surface mb-2 group-hover:text-primary transition-colors">Audio Post</h4>
+<p class="font-body-md text-sm text-on-surface-variant/60 leading-relaxed mb-xl line-clamp-3">DAW integration, VST manager, and studio monitor routing configurations.</p>
+<div class="mt-auto flex justify-end">
+<button class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/40 group-hover:text-primary transition-all">
+      Launch <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Card 5: Research & Data -->
+<div class="glass-card p-xl rounded-xl flex flex-col group h-[340px] relative overflow-hidden">
+<div class="flex items-start justify-between mb-lg">
+<div class="w-12 h-12 rounded-lg bg-white/[0.03] border border-white/[0.08] flex items-center justify-center icon-glow text-secondary">
+<span class="material-symbols-outlined text-2xl">analytics</span>
+</div>
+<span class="text-[10px] font-bold text-secondary uppercase tracking-[0.15em] bg-secondary/10 px-2.5 py-1 rounded-full">Ready</span>
+</div>
+<h4 class="font-headline-md text-[20px] text-on-surface mb-2 group-hover:text-secondary transition-colors">Research Lab</h4>
+<p class="font-body-md text-sm text-on-surface-variant/60 leading-relaxed mb-xl line-clamp-3">Python notebooks, data visualization suites, and deep-learning local hosts.</p>
+<div class="mt-auto flex justify-end">
+<button class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-on-surface-variant/40 group-hover:text-secondary transition-all">
+      Launch <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Create New Card -->
+<button class="border border-dashed border-white/10 hover:border-primary/40 hover:bg-primary/[0.02] transition-all duration-500 rounded-xl flex flex-col items-center justify-center p-xl group h-[340px]">
+<div class="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center mb-md group-hover:border-primary/40 group-hover:scale-110 transition-all duration-500">
+<span class="material-symbols-outlined text-on-surface-variant/30 group-hover:text-primary text-3xl">add</span>
+</div>
+<span class="font-headline-md text-[20px] text-on-surface-variant/60 group-hover:text-on-surface transition-colors">Custom Preset</span>
+<p class="font-label-md text-[10px] text-on-surface-variant/20 mt-2 uppercase tracking-[0.2em]">Build from scratch</p>
+</button>
+</div>
+<!-- Footer Stats -->
+<footer class="mt-xl pt-xl border-t border-white/[0.06] flex items-center justify-between opacity-30">
+<div class="flex gap-xl">
+<div>
+<p class="font-label-md text-[10px] uppercase tracking-widest mb-xs">Uptime</p>
+<p class="font-body-md text-body-md text-on-surface font-medium">128:45:12</p>
+</div>
+<div>
+<p class="font-label-md text-[10px] uppercase tracking-widest mb-xs">Modules</p>
+<p class="font-body-md text-body-md text-on-surface font-medium">14 Instances</p>
+</div>
+</div>
+<div class="flex gap-lg">
+<span class="material-symbols-outlined text-xl">wifi_tethering</span>
+<span class="material-symbols-outlined text-xl">security</span>
+<span class="material-symbols-outlined text-xl">update</span>
+</div>
+</footer>
+</div>
+</main>
+<script>
+    // Search focus interaction
+    const searchInput = document.querySelector('input');
+    searchInput.addEventListener('focus', () => {
+        searchInput.parentElement.style.borderColor = 'rgba(208, 188, 255, 0.4)';
+    });
+    searchInput.addEventListener('blur', () => {
+        searchInput.parentElement.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+    });
+</script>
+</body></html>

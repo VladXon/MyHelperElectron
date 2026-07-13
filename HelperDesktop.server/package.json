@@ -1,0 +1,40 @@
+{
+  "name": "helperdesktop-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "dev:mem": "set NODE_OPTIONS=--max-old-space-size=4096 && tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/HelperDesktop.server/src/index.js",
+    "test": "vitest run",
+    "test:e2e": "vitest run e2e"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.4",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/ws": "^8.18.1",
+    "better-sqlite3": "^11.10.0",
+    "cors": "^2.8.5",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "ws": "^8.21.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.3",
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.19.0",
+    "typescript": "~5.8.3",
+    "vitest": "^4.1.10"
+  }
+}

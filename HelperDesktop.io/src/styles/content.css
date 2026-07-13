@@ -1,0 +1,11 @@
+.content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  overflow: hidden;
+}
+
+.content-relative {
+  position: relative;
+}
