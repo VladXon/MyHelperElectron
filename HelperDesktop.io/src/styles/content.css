@@ -1,11 +1,23 @@
 .content {
   flex: 1;
-  display: flex;
-  justify-content: center;
-  background: transparent;
   overflow: hidden;
+  position: relative;
+  background: var(--bg-primary);
 }
 
 .content-relative {
   position: relative;
+  z-index: 1;
+}
+
+.content::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(600px circle at 20% 30%, rgba(139, 92, 246, 0.03) 0%, transparent 60%),
+    radial-gradient(500px circle at 80% 70%, rgba(99, 102, 241, 0.025) 0%, transparent 60%),
+    radial-gradient(400px circle at 50% 0%, rgba(139, 92, 246, 0.015) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
