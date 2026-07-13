@@ -1,10 +1,15 @@
 .notes-page {
   width: 100%;
-  max-width: 700px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-margin);
+}
+
+.notes-title {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
 }
 
 .notes-header {
@@ -17,6 +22,12 @@
   margin: 0;
   font-size: 22px;
   color: var(--text-primary);
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-gutter);
 }
 
 .notes-search {
@@ -95,14 +106,44 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  background: rgba(17, 17, 34, 0.85);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
   transition: all var(--transition);
 }
 
 .note-card:hover {
-  border-color: var(--accent);
+  transform: translateY(-2px);
+  border-color: rgba(208, 188, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.note-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.note-card-preview {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.note-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 .note-card.completed {
