@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, ipcMain, globalShortcut } from 'electron';
 import path from 'node:path';
 import fs from 'node:fs';
-import { WebSocket as WsClient } from 'ws';
+import WsClient from 'ws';
 import started from 'electron-squirrel-startup';
 import { registerAllIPC, loadAuthFile } from './main/ipc';
 

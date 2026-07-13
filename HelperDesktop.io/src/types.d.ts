@@ -94,19 +94,22 @@ export interface ElectronTelegramAPI {
 
 export interface Note {
   id: number;
+  user_id: number;
   title: string;
   body: string;
   tags: string[];
   pinned: boolean;
   completed: boolean;
-  reminder_at?: number | null;
+  reminder_at: number | null;
+  notify_telegram: boolean;
+  telegram_notified: boolean;
   created_at: string;
   updated_at: string;
 }
 
 export interface ElectronNotesAPI {
   getAll: () => Promise<Note[]>;
-  create: (note: { title: string; body: string; tags: string[]; reminder_at?: number | null }) => Promise<Note>;
+  create: (note: { title: string; body: string; tags: string[]; reminder_at?: number | null; notify_telegram?: boolean }) => Promise<Note>;
   update: (id: number, note: Record<string, unknown>) => Promise<Note>;
   remove: (id: number) => Promise<void>;
   toggle: (id: number, field: 'pinned' | 'completed') => Promise<Note>;
