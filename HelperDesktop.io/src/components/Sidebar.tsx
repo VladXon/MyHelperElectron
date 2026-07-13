@@ -64,6 +64,18 @@ export default function Sidebar({
 
   return (
     <aside className="sidebar">
+      <div className="sidebar-header">
+        <div className="sidebar-logo">
+          <div className="sidebar-logo-icon">
+            <span className="material-symbols-outlined">layers</span>
+          </div>
+          <div className="sidebar-logo-text">
+            <h1 className="sidebar-title">Pro Studio</h1>
+            <p className="sidebar-subtitle">WORKSTATION</p>
+          </div>
+        </div>
+      </div>
+
       <nav className="sidebar-nav">
         {pages.map(item => (
           <motion.button
@@ -112,6 +124,19 @@ export default function Sidebar({
       </nav>
 
       <div className="sidebar-bottom" ref={menuRef}>
+        <div className="system-status">
+          <div className="system-status-label">
+            <span className="system-status-dot"></span>
+            SYSTEM STATUS
+          </div>
+          <p className="system-status-value">CPU: 12% | RAM: 4.2GB</p>
+        </div>
+        
+        <button className="new-project-btn">
+          <span className="material-symbols-outlined">add</span>
+          <span>New Project</span>
+        </button>
+
         <div className="user-row">
           <div className="user-avatar-ring">
             <div className="user-avatar">
