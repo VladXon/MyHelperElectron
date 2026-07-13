@@ -1,13 +1,15 @@
 .titlebar {
   height: 36px;
   min-height: 36px;
-  background: rgba(7, 7, 14, 0.95);
+  background: var(--bg-sidebar);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   display: flex;
   align-items: center;
   justify-content: space-between;
   -webkit-app-region: drag;
   user-select: none;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--glass-border);
   z-index: 10;
   will-change: transform;
 }
@@ -15,8 +17,8 @@
 .titlebar-left {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding-left: 14px;
+  gap: var(--space-sm);
+  padding-left: var(--space-md);
   -webkit-app-region: no-drag;
   cursor: pointer;
   height: 100%;
@@ -25,7 +27,7 @@
 .titlebar-brand {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-sm);
   font-size: 11px;
   font-weight: 600;
   color: var(--text-muted);
@@ -37,7 +39,7 @@
 .titlebar-brand-dot {
   width: 7px;
   height: 7px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   flex-shrink: 0;
   transition: all var(--transition);
   position: relative;
@@ -47,7 +49,7 @@
   content: '';
   position: absolute;
   inset: -4px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   opacity: 0;
   transition: opacity var(--transition);
 }
