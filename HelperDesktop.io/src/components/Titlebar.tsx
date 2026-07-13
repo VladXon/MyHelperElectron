@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Minus, Square, SquaresFour, X } from '@phosphor-icons/react';
 
 interface TitlebarProps {
   serverOnline: boolean;
@@ -24,13 +23,17 @@ export default function Titlebar({ serverOnline, onReconnect }: TitlebarProps) {
 
       <div className="titlebar-controls">
         <button className="titlebar-btn" onClick={() => window.electronWindow.minimize()} aria-label="Свернуть">
-          <Minus size={14} />
+          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>minimize</span>
         </button>
         <button className="titlebar-btn" onClick={() => window.electronWindow.maximizeToggle()} aria-label={maximized ? 'Восстановить' : 'Развернуть'}>
-          {maximized ? <SquaresFour size={12} /> : <Square size={12} />}
+          {maximized ? (
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>filter_none</span>
+          ) : (
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>crop_square</span>
+          )}
         </button>
         <button className="titlebar-btn titlebar-close" onClick={() => window.electronWindow.close()} aria-label="Закрыть">
-          <X size={14} />
+          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
         </button>
       </div>
     </div>

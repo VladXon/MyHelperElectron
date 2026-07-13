@@ -1,6 +1,5 @@
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MagnifyingGlass, X, PushPin, PencilSimple, Trash, Check, Play, Package, Package as PackageIcon } from '@phosphor-icons/react';
 import type { Preset } from '../types.d';
 
 interface PresetsPageProps {
@@ -65,7 +64,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
             title={preset.pinned ? 'Открепить' : 'Закрепить'}
             whileTap={{ scale: 0.95 }}
           >
-            <PushPin size={14} weight={preset.pinned ? 'fill' : 'regular'} />
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>push_pin</span>
           </motion.button>
           <motion.button
             className="preset-card-btn preset-card-edit"
@@ -73,7 +72,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
             title="Редактировать"
             whileTap={{ scale: 0.95 }}
           >
-            <PencilSimple size={14} />
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>edit</span>
           </motion.button>
           <motion.button
             className={`preset-card-btn preset-card-delete${confirmDelete === preset.id ? ' confirming' : ''}`}
@@ -82,9 +81,9 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
             whileTap={{ scale: 0.95 }}
           >
             {confirmDelete === preset.id ? (
-              <Check size={14} />
+              <span className="material-symbols-outlined" style={{ fontSize: 14 }}>check</span>
             ) : (
-              <Trash size={14} />
+              <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
             )}
           </motion.button>
         </div>
@@ -148,7 +147,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
           >
-            <X size={12} />
+            <span className="material-symbols-outlined" style={{ fontSize: 12 }}>close</span>
           </motion.button>
         )}
       </div>

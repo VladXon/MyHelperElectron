@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { X, Plus, FolderOpen, ShieldCheck, Trash } from '@phosphor-icons/react';
 import type { Preset, PresetApp } from '../types.d';
 
 interface PresetEditModalProps {
@@ -67,7 +66,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
         transition={{ type: 'spring', stiffness: 350, damping: 28 }}
       >
         <button className="modal-close" onClick={onClose} disabled={saving}>
-          <X size={14} />
+          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
         </button>
 
         <div className="modal-header">
@@ -112,7 +111,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
               style={{ padding: '3px 10px', fontSize: 11 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Plus size={12} style={{ marginRight: 2 }} />
+              <span className="material-symbols-outlined" style={{ fontSize: 12, marginRight: 2 }}>add</span>
               Добавить
             </motion.button>
           </div>
@@ -151,7 +150,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
                       title="Обзор"
                       whileTap={{ scale: 0.95 }}
                     >
-                      <FolderOpen size={14} />
+                      <span className="material-symbols-outlined" style={{ fontSize: 14 }}>folder_open</span>
                     </motion.button>
                     <label className={`admin-toggle${app.runAsAdmin ? ' active' : ''}`} title="Запуск от имени администратора">
                       <input
@@ -162,7 +161,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
                       />
                       <span className="admin-toggle-track">
                         <span className="admin-toggle-thumb">
-                          <ShieldCheck size={10} className="admin-toggle-icon" />
+                          <span className="material-symbols-outlined admin-toggle-icon" style={{ fontSize: 10 }}>admin_panel_settings</span>
                         </span>
                       </span>
                     </label>
@@ -175,7 +174,7 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
                   title="Удалить"
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Trash size={14} />
+                  <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
                 </motion.button>
               </motion.div>
             ))}

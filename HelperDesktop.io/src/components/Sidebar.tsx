@@ -1,12 +1,11 @@
-import { useState, useRef, useEffect, type ReactNode } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SquaresFour, Gear, Notebook, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
 import { useAuth } from '../AuthContext';
 
-const iconMap: Record<string, ReactNode> = {
-  presets: <SquaresFour size={20} />,
-  notes: <Notebook size={20} />,
-  settings: <Gear size={20} />,
+const iconMap: Record<string, string> = {
+  presets: 'dashboard',
+  notes: 'edit_note',
+  settings: 'settings',
 };
 
 interface SidebarItem {
@@ -86,7 +85,9 @@ export default function Sidebar({
             whileTap={{ scale: 0.97 }}
             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
           >
-            <span className="sidebar-item-icon">{iconMap[item.id]}</span>
+            <span className="sidebar-item-icon">
+              <span className="material-symbols-outlined">{iconMap[item.id]}</span>
+            </span>
             <span className="sidebar-item-label">{item.label}</span>
           </motion.button>
         ))}
@@ -115,7 +116,7 @@ export default function Sidebar({
                   onClick={() => onEditPreset(p.id)}
                   title="Редактировать"
                 >
-                  <PencilSimple size={12} />
+                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>edit</span>
                 </button>
               </div>
             ))}
@@ -197,7 +198,7 @@ export default function Sidebar({
                       onClick={(e) => handleRemoveAccount(e, acct.login)}
                       title="Удалить аккаунт"
                     >
-                      <Trash size={12} />
+                      <span className="material-symbols-outlined" style={{ fontSize: 12 }}>delete</span>
                     </button>
                   )}
                 </button>
@@ -210,7 +211,7 @@ export default function Sidebar({
                     onAddAccount();
                   }}
                 >
-                  <Plus size={14} />
+                  <span className="material-symbols-outlined" style={{ fontSize: 14 }}>add</span>
                   <span>Добавить аккаунт</span>
                 </button>
               )}

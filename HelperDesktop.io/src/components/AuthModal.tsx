@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, X, CaretRight } from '@phosphor-icons/react';
 import { useAuth } from '../AuthContext';
 
 interface AuthModalProps {
@@ -55,12 +54,12 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         transition={{ type: 'spring', stiffness: 350, damping: 28 }}
       >
         <button className="modal-close" onClick={onClose} disabled={loading}>
-          <X size={14} />
+          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
         </button>
 
         <div className="modal-header">
           <div className="modal-icon">
-            <User size={22} />
+            <span className="material-symbols-outlined" style={{ fontSize: 22 }}>person</span>
           </div>
           <h2 className="modal-title">Войти в аккаунт</h2>
           <p className="modal-subtitle">Введите логин и пароль</p>
@@ -97,7 +96,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
             {loading ? 'Вход...' : (
               <>
                 Войти
-                <CaretRight size={16} />
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>arrow_forward</span>
               </>
             )}
           </button>

@@ -121,6 +121,12 @@ body {
   background: var(--bg-primary);
 }
 
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
 .app::before {
   content: '';
   position: fixed;
