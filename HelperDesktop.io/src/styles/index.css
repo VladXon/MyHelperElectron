@@ -1,4 +1,5 @@
 @import './global.css';
+@import './glass-utilities.css';
 @import './titlebar.css';
 @import './sidebar.css';
 @import './content.css';
