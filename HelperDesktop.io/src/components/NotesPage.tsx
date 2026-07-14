@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, PushPin, PushPinSlash, Check, Circle, Clock, Tag, Trash, PencilSimple, X, Notebook, PaperPlaneRight } from '@phosphor-icons/react';
 import { useAuth } from '../AuthContext';
 import { useNotes, useCreateNote, useUpdateNote, useDeleteNote, useToggleNote } from '../hooks/useNotes';
 import { useTelegramStatus } from '../hooks/useTelegramStatus';
@@ -101,23 +102,19 @@ export default function NotesPage() {
       transition={{ type: 'spring', stiffness: 400, damping: 28 }}
     >
       <button className="note-check" onClick={() => handleToggle(note.id, 'completed')} title={note.completed ? 'Вернуть' : 'Выполнено'}>
-        {note.completed ? (
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>check_circle</span>
-        ) : (
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>radio_button_unchecked</span>
-        )}
+        {note.completed ? <Check size={16} /> : <Circle size={16} />}
       </button>
       <div className="note-body">
         <div className="note-header">
           <span className="note-title">{note.title || 'Без заголовка'}</span>
           {note.reminder_at && (
             <span className="note-reminder">
-              <span className="material-symbols-outlined" style={{ fontSize: 12 }}>schedule</span> {formatTime(note.reminder_at)}
+              <Clock size={12} /> {formatTime(note.reminder_at)}
             </span>
           )}
           {note.notify_telegram && (
             <span className={`note-telegram ${note.telegram_notified ? 'sent' : ''}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: 12 }}>send</span>
+              <PaperPlaneRight size={12} />
             </span>
           )}
         </div>
@@ -126,24 +123,20 @@ export default function NotesPage() {
           <span className="note-date">{new Date(note.created_at).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: '2-digit' })}</span>
           {note.tags.length > 0 && (
             <div className="note-tags">
-              {note.tags.map(t => (
-                <span key={t} className="note-tag">
-                  <span className="material-symbols-outlined" style={{ fontSize: 10 }}>label</span> {t}
-                </span>
-              ))}
+              {note.tags.map(t => <span key={t} className="note-tag"><Tag size={10} /> {t}</span>)}
             </div>
           )}
         </div>
       </div>
       <div className="note-actions">
         <button className="note-action-btn" onClick={() => handleToggle(note.id, 'pinned')} title={note.pinned ? 'Открепить' : 'Закрепить'}>
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>{note.pinned ? 'push_pin' : 'push_pin'}</span>
+          {note.pinned ? <PushPinSlash size={14} /> : <PushPin size={14} />}
         </button>
         <button className="note-action-btn" onClick={() => handleEdit(note)} title="Редактировать">
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>edit</span>
+          <PencilSimple size={14} />
         </button>
         <button className={`note-action-btn ${deleteConfirm === note.id ? 'danger' : ''}`} onClick={() => handleDelete(note.id)} title={deleteConfirm === note.id ? 'Нажмите ещё раз' : 'Удалить'}>
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>delete</span>
+          <Trash size={14} />
         </button>
       </div>
     </motion.div>
@@ -153,26 +146,21 @@ export default function NotesPage() {
     <motion.div className="notes-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
       {!user ? (
         <div className="notes-empty">
-          <span className="material-symbols-outlined" style={{ fontSize: 48, opacity: 0.4 }}>note</span>
+          <Notebook size={48} />
           <p>Войдите для просмотра заметок</p>
         </div>
       ) : (<>
       <div className="notes-header">
         <h2>Заметки</h2>
-        <button className="btn-new-note" onClick={handleCreate}>
-          <span className="material-symbols-outlined">add_note</span> Новая заметка
-        </button>
+        <button className="btn-primary" onClick={handleCreate}><Plus size={16} /> Новая</button>
       </div>
       <div className="notes-search">
-        <span className="material-symbols-outlined" style={{ fontSize: 18, position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', pointerEvents: 'none' }}>search</span>
-        <input type="text" placeholder="Поиск заметок..." value={search} onChange={e => setSearch(e.target.value)} style={{ paddingLeft: 36 }} />
-        {search && <button className="search-clear" onClick={() => setSearch('')}>
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
-        </button>}
+        <input type="text" placeholder="Поиск заметок..." value={search} onChange={e => setSearch(e.target.value)} />
+        {search && <button className="search-clear" onClick={() => setSearch('')}><X size={14} /></button>}
       </div>
       {filtered.length === 0 ? (
         <div className="notes-empty">
-          <span className="material-symbols-outlined" style={{ fontSize: 48, opacity: 0.4 }}>note</span>
+          <Notebook size={48} />
           <p>{search ? 'Ничего не найдено' : 'Нет заметок'}</p>
           {!search && <span>Нажмите «Новая» чтобы создать</span>}
         </div>
