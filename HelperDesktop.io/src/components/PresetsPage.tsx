@@ -1,19 +1,19 @@
 import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePresets, useSavePreset, useDeletePreset, useTogglePresetPin } from '../hooks/usePresets';
+import PresetEditModal from './PresetEditModal';
 import type { Preset } from '../types.d';
 
-interface PresetsPageProps {
-  presets: Preset[];
-  onLaunch: (id: string) => void;
-  onEdit: (id: string) => void;
-  onAdd: () => void;
-  onTogglePin: (id: string) => void;
-  onDelete: (id: string) => void;
-}
+export default function PresetsPage() {
+  const { data: presets = [], isLoading } = usePresets();
+  const savePreset = useSavePreset();
+  const deletePreset = useDeletePreset();
+  const togglePresetPin = useTogglePresetPin();
 
-export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onTogglePin, onDelete }: PresetsPageProps) {
   const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
+  const [editPreset, setEditPreset] = useState<Preset | null>(null);
+  const [showNewPreset, setShowNewPreset] = useState(false);
 
   const pinned = useMemo(() => presets.filter(p => p.pinned), [presets]);
   const unpinned = useMemo(() => presets.filter(p => !p.pinned), [presets]);
@@ -27,12 +27,19 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
 
   const handleDelete = useCallback((id: string) => {
     if (confirmDelete === id) {
-      onDelete(id);
+      deletePreset.mutate(id);
       setConfirmDelete(null);
     } else {
       setConfirmDelete(id);
     }
-  }, [confirmDelete, onDelete]);
+  }, [confirmDelete, deletePreset]);
+
+  const handleLaunch = useCallback(async (id: string) => {
+    const preset = presets.find(p => p.id === id);
+    if (preset && preset.apps.length > 0) {
+      await window.electronPresets.launch(preset.apps);
+    }
+  }, [presets]);
 
   const renderCard = (preset: Preset) => (
     <motion.div
@@ -60,7 +67,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
         <div className="preset-card-actions">
           <motion.button
             className={`preset-card-btn preset-card-pin${preset.pinned ? ' pinned' : ''}`}
-            onClick={() => onTogglePin(preset.id)}
+            onClick={() => togglePresetPin.mutate(preset)}
             title={preset.pinned ? 'Открепить' : 'Закрепить'}
             whileTap={{ scale: 0.95 }}
           >
@@ -68,7 +75,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
           </motion.button>
           <motion.button
             className="preset-card-btn preset-card-edit"
-            onClick={() => onEdit(preset.id)}
+            onClick={() => setEditPreset(preset)}
             title="Редактировать"
             whileTap={{ scale: 0.95 }}
           >
@@ -89,7 +96,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
         </div>
         <motion.button
           className="preset-card-launch"
-          onClick={() => onLaunch(preset.id)}
+          onClick={() => handleLaunch(preset.id)}
           title="Запустить"
           whileTap={{ scale: 0.95 }}
         >
@@ -100,6 +107,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
   );
 
   return (
+    <>
     <motion.div
       className="presets-page"
       initial={{ opacity: 0, y: 8 }}
@@ -122,7 +130,7 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
         </div>
         <motion.button
           className="btn-primary"
-          onClick={onAdd}
+          onClick={() => setShowNewPreset(true)}
           whileTap={{ scale: 0.97 }}
         >
           + Создать
@@ -152,7 +160,11 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
         )}
       </div>
 
-      {presets.length === 0 ? (
+      {isLoading ? (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+          <div className="loading-spinner" />
+        </div>
+      ) : presets.length === 0 ? (
         <div className="presets-empty">
           <div className="presets-empty-icon">
             <span className="material-symbols-outlined" style={{ fontSize: '48px', opacity: 0.4 }}>package</span>
@@ -200,5 +212,15 @@ export default function PresetsPage({ presets, onLaunch, onEdit, onAdd, onToggle
         </>
       )}
     </motion.div>
+    <AnimatePresence>
+      {(editPreset !== null || showNewPreset) && (
+        <PresetEditModal
+          preset={editPreset}
+          onClose={() => { setEditPreset(null); setShowNewPreset(false); }}
+          onSave={savePreset.mutateAsync}
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 }

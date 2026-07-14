@@ -7,7 +7,7 @@ import Titlebar from './components/Titlebar';
 import AuthModal from './components/AuthModal';
 import PresetEditModal from './components/PresetEditModal';
 import CommandPalette from './components/CommandPalette';
-import type { Preset } from './types.d';
+import type { Preset, Note } from './types.d';
 
 const SettingsPage = lazy(() => import('./components/SettingsPage'));
 const PresetsPage = lazy(() => import('./components/PresetsPage'));
@@ -37,49 +37,32 @@ function AppContent() {
   const wasOffline = useRef(false);
 
   const [presets, setPresets] = useState<Preset[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [editPreset, setEditPreset] = useState<Preset | null | 'new'>('new');
 
   useEffect(() => {
     window.electronPresets.getAll().then(setPresets);
   }, []);
 
-  userRef.current = user;
-
-  const handleHealthEvent = useCallback((data: { online: boolean }) => {
-    const wasOnline = serverOnlineRef.current;
-    if (data.online && !wasOnline) {
-      serverOnlineRef.current = true;
-      setServerOnline(true);
-      if (wasOffline.current) {
-        wasOffline.current = false;
-        (async () => {
-          const creds = await window.electronAuth.loadCredentials();
-          if (creds.login && !userRef.current) {
-            try {
-              await login(creds.login, creds.login, creds.password || '');
-            } catch { /* auto-login failed */ }
-          }
-        })();
-      }
-    } else if (!data.online && wasOnline) {
-      serverOnlineRef.current = false;
-      setServerOnline(false);
-      wasOffline.current = true;
+  useEffect(() => {
+    if (user) {
+      window.electronNotes.getAll().then(setNotes);
     }
-  }, [login]);
+  }, [user]);
+
+  userRef.current = user;
 
   useEffect(() => {
     let cancelled = false;
-    let pollingTimer: ReturnType<typeof setInterval> | null = null;
 
-    const checkServer = async () => {
-      if (cancelled) return;
+    const autoLogin = async () => {
+      if (cancelled || userRef.current) return;
       try {
-        const ok = await window.electronServer.test();
-        handleHealthEvent({ online: ok });
-      } catch {
-        handleHealthEvent({ online: false });
-      }
+        const creds = await window.electronAuth.loadCredentials();
+        if (creds.login && !userRef.current) {
+          await login(creds.login, creds.login, creds.password || '');
+        }
+      } catch { /* auto-login failed */ }
     };
 
     const cleanup = window.electronServer.onHealth((data) => {
@@ -88,31 +71,25 @@ function AppContent() {
       setServerOnline(data.online);
       if (data.online && wasOffline.current) {
         wasOffline.current = false;
-        (async () => {
-          const creds = await window.electronAuth.loadCredentials();
-          if (creds.login && !userRef.current) {
-            try {
-              await login(creds.login, creds.login, creds.password || '');
-            } catch { /* auto-login failed */ }
-          }
-        })();
+        void autoLogin();
       } else if (!data.online) {
         wasOffline.current = true;
       }
     });
 
-    checkServer().then(() => {
+    void window.electronServer.test().then(ok => {
+      if (cancelled) return;
+      serverOnlineRef.current = ok;
+      setServerOnline(ok);
+      if (!ok) wasOffline.current = true;
       void window.electronServer.connectWs();
     });
-
-    pollingTimer = setInterval(checkServer, 30000);
 
     return () => {
       cancelled = true;
       cleanup();
-      if (pollingTimer) clearInterval(pollingTimer);
     };
-  }, [login, handleHealthEvent]);
+  }, [login]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -135,32 +112,17 @@ function AppContent() {
 
   const handleReconnect = useCallback(() => {
     void window.electronServer.connectWs();
-    window.electronServer.test().then(ok => {
+    void window.electronServer.test().then(ok => {
       serverOnlineRef.current = ok;
       setServerOnline(ok);
-      if (ok && wasOffline.current) {
-        wasOffline.current = false;
-        (async () => {
-          const creds = await window.electronAuth.loadCredentials();
-          if (creds.login && !userRef.current) {
-            try {
-              await login(creds.login, creds.login, creds.password || '');
-            } catch { /* auto-login failed */ }
-          }
-        })();
-      }
     });
-  }, [login]);
+  }, []);
 
   const handleSelectPage = useCallback((id: string) => {
     setActivePage(id);
   }, []);
 
   const handleLoginClick = useCallback(() => {
-    setShowAuth(true);
-  }, []);
-
-  const handleAddAccount = useCallback(() => {
     setShowAuth(true);
   }, []);
 
@@ -184,7 +146,8 @@ function AppContent() {
     setEditPreset(null);
   }, []);
 
-  const handleSavePreset = useCallback((saved: Preset) => {
+  const handleSavePreset = useCallback(async (saved: Preset) => {
+    await window.electronPresets.save(saved);
     setPresets(prev => {
       const idx = prev.findIndex(p => p.id === saved.id);
       if (idx >= 0) {
@@ -237,15 +200,7 @@ function AppContent() {
     if (activePage === 'presets') {
       return (
         <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}><div className="loading-spinner" /></div>}>
-          <PresetsPage
-            key="presets"
-            presets={presets}
-            onLaunch={handleLaunchPreset}
-            onEdit={handleEditPreset}
-            onAdd={handleAddPreset}
-            onTogglePin={handleTogglePin}
-            onDelete={handleDeletePreset}
-          />
+          <PresetsPage key="presets" />
         </Suspense>
       );
     }
@@ -261,14 +216,13 @@ function AppContent() {
       <Titlebar
         serverOnline={serverOnline}
         onReconnect={handleReconnect}
+        onLoginClick={handleLoginClick}
       />
       <div className="app-body">
         <Sidebar
           pages={pages}
           active={activePage}
           onSelect={handleSelectPage}
-          onLoginClick={handleLoginClick}
-          onAddAccount={handleAddAccount}
           pinnedPresets={pinnedPresets}
           onLaunchPreset={handleLaunchPreset}
           onEditPreset={handleEditPreset}
@@ -297,6 +251,12 @@ function AppContent() {
             onClose={() => setShowCmdPalette(false)}
             onNavigate={handleSelectPage}
             pages={pages}
+            notes={notes}
+            presets={presets}
+            onOpenNote={(noteId) => {
+              setActivePage('notes');
+              window.dispatchEvent(new CustomEvent('deep-link-note', { detail: noteId }));
+            }}
           />
         )}
       </AnimatePresence>
