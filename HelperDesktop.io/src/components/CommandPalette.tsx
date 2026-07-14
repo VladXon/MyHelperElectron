@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { MagnifyingGlass, SquaresFour, Notebook, Gear } from '@phosphor-icons/react';
+import { MagnifyingGlass, SquaresFour, Notebook, Gear, Tag } from '@phosphor-icons/react';
 
 const iconMap: Record<string, typeof SquaresFour> = {
   presets: SquaresFour,
@@ -12,18 +12,81 @@ interface CommandPaletteProps {
   onClose: () => void;
   onNavigate: (id: string) => void;
   pages: { id: string; label: string }[];
+  notes?: { id: number; title: string; body: string; tags: string[] }[];
+  presets?: { id: string; name: string; icon: string }[];
+  onOpenNote?: (id: number) => void;
+  onOpenPreset?: (id: string) => void;
 }
 
-export default function CommandPalette({ onClose, onNavigate, pages }: CommandPaletteProps) {
+interface SearchItem {
+  id: string;
+  label: string;
+  section: string;
+  icon: typeof SquaresFour;
+  action: () => void;
+  tags?: string[];
+}
+
+export default function CommandPalette({ onClose, onNavigate, pages, notes = [], presets = [], onOpenNote, onOpenPreset }: CommandPaletteProps) {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const items = useMemo(() => {
-    if (!query.trim()) return pages;
+    const allItems: SearchItem[] = [];
+
+    pages.forEach(p => {
+      allItems.push({
+        id: `page-${p.id}`,
+        label: p.label,
+        section: 'Страницы',
+        icon: iconMap[p.id] || SquaresFour,
+        action: () => { onNavigate(p.id); onClose(); },
+      });
+    });
+
+    notes.forEach(n => {
+      allItems.push({
+        id: `note-${n.id}`,
+        label: n.title || 'Без заголовка',
+        section: 'Заметки',
+        icon: Notebook,
+        action: () => { onNavigate('notes'); onOpenNote?.(n.id); onClose(); },
+        tags: n.tags,
+      });
+    });
+
+    presets.forEach(p => {
+      allItems.push({
+        id: `preset-${p.id}`,
+        label: p.name,
+        section: 'Пресеты',
+        icon: SquaresFour,
+        action: () => { onNavigate('presets'); onOpenPreset?.(p.id); onClose(); },
+      });
+    });
+
+    if (!query.trim()) return allItems;
+
     const q = query.toLowerCase();
-    return pages.filter(i => i.label.toLowerCase().includes(q));
-  }, [query, pages]);
+    return allItems.filter(item =>
+      item.label.toLowerCase().includes(q) ||
+      item.section.toLowerCase().includes(q) ||
+      item.tags?.some(t => t.toLowerCase().includes(q))
+    );
+  }, [query, pages, notes, presets, onNavigate, onOpenNote, onOpenPreset, onClose]);
+
+  const sections = useMemo(() => {
+    const map = new Map<string, SearchItem[]>();
+    items.forEach(item => {
+      const arr = map.get(item.section) || [];
+      arr.push(item);
+      map.set(item.section, arr);
+    });
+    return Array.from(map.entries());
+  }, [items]);
+
+  const flatItems = useMemo(() => items, [items]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -36,17 +99,18 @@ export default function CommandPalette({ onClose, onNavigate, pages }: CommandPa
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelected(p => Math.min(p + 1, items.length - 1));
+      setSelected(p => Math.min(p + 1, flatItems.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setSelected(p => Math.max(p - 1, 0));
-    } else if (e.key === 'Enter' && items[selected]) {
-      onNavigate(items[selected].id);
-      onClose();
+    } else if (e.key === 'Enter' && flatItems[selected]) {
+      flatItems[selected].action();
     } else if (e.key === 'Escape') {
       onClose();
     }
   };
+
+  let itemIndex = -1;
 
   return (
     <motion.div
@@ -74,29 +138,44 @@ export default function CommandPalette({ onClose, onNavigate, pages }: CommandPa
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKey}
-            placeholder="Поиск страниц..."
+            placeholder="Поиск страниц, заметок, пресетов..."
           />
         </div>
         <div className="cmd-palette-list">
-          {items.length === 0 ? (
+          {flatItems.length === 0 ? (
             <div className="cmd-palette-empty">Ничего не найдено</div>
           ) : (
-            items.map((item, i) => {
-              const Icon = iconMap[item.id] || SquaresFour;
-              return (
-                <button
-                  key={item.id}
-                  className={`cmd-palette-item${i === selected ? ' selected' : ''}`}
-                  onClick={() => { onNavigate(item.id); onClose(); }}
-                  onMouseEnter={() => setSelected(i)}
-                >
-                  <span className="cmd-palette-item-icon">
-                    <Icon size={18} />
-                  </span>
-                  {item.label}
-                </button>
-              );
-            })
+            sections.map(([section, sectionItems]) => (
+              <div key={section}>
+                <div className="cmd-palette-section">{section}</div>
+                {sectionItems.map(item => {
+                  itemIndex++;
+                  const idx = itemIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      className={`cmd-palette-item${idx === selected ? ' selected' : ''}`}
+                      onClick={item.action}
+                      onMouseEnter={() => setSelected(idx)}
+                    >
+                      <span className="cmd-palette-item-icon">
+                        <item.icon size={18} />
+                      </span>
+                      <span className="cmd-palette-item-label">{item.label}</span>
+                      {item.tags && item.tags.length > 0 && (
+                        <span className="cmd-palette-item-tags">
+                          {item.tags.slice(0, 2).map(t => (
+                            <span key={t} className="cmd-palette-tag">
+                              <Tag size={10} /> {t}
+                            </span>
+                          ))}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ))
           )}
         </div>
       </motion.div>

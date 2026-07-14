@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePresets, useSavePreset, useDeletePreset, useTogglePresetPin } from '../hooks/usePresets';
 import PresetEditModal from './PresetEditModal';
@@ -14,6 +14,16 @@ export default function PresetsPage() {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [editPreset, setEditPreset] = useState<Preset | null>(null);
   const [showNewPreset, setShowNewPreset] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const id = (e as CustomEvent).detail;
+      const preset = presets.find(p => p.id === id);
+      if (preset) setEditPreset(preset);
+    };
+    window.addEventListener('preset-edit', handler);
+    return () => window.removeEventListener('preset-edit', handler);
+  }, [presets]);
 
   const pinned = useMemo(() => presets.filter(p => p.pinned), [presets]);
   const unpinned = useMemo(() => presets.filter(p => !p.pinned), [presets]);

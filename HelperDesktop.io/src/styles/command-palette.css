@@ -97,3 +97,42 @@
   color: var(--text-muted);
   font-size: 13px;
 }
+
+.cmd-palette-section {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: var(--space-sm) var(--space-md) var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.cmd-palette-section:first-child {
+  margin-top: 0;
+}
+
+.cmd-palette-item-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cmd-palette-item-tags {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cmd-palette-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: rgba(208, 188, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 8px;
+}

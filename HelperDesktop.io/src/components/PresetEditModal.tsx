@@ -43,7 +43,6 @@ export default function PresetEditModal({ preset, onClose, onSave }: PresetEditM
     const id = preset?.id ?? crypto.randomUUID();
     const filtered = apps.filter(a => a.name.trim() || a.path.trim());
     const newPreset: Preset = { id, name: name.trim(), icon: icon || '🎮', apps: filtered };
-    await window.electronPresets.save(newPreset);
     onSave(newPreset);
     setSaving(false);
   }, [name, icon, apps, preset, onSave]);

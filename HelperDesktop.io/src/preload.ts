@@ -14,6 +14,15 @@ contextBridge.exposeInMainWorld('electronWindow', {
       ipcRenderer.removeListener('window-maximized-changed', handler);
     };
   },
+  onResized: (callback: (size: { width: number; height: number }) => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, size: unknown) => {
+      callback(size as { width: number; height: number });
+    };
+    ipcRenderer.on('window-resized', handler);
+    return () => {
+      ipcRenderer.removeListener('window-resized', handler);
+    };
+  },
 });
 
 contextBridge.exposeInMainWorld('electronAuth', {

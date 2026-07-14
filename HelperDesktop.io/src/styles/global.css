@@ -33,6 +33,24 @@
   --text-primary: #ffffff;
   --text-secondary: #cbc3d7;
   --text-muted: #958ea0;
+  --text-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  
+  /* Background */
+  --bg-tertiary: #1f1f26;
+  
+  /* Accent variants */
+  --accent: #d0bcff;
+  --accent-hover: #b49aff;
+  --accent-subtle: rgba(208, 188, 255, 0.12);
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #cbc3d7;
+  --text-muted: #958ea0;
   
   /* Borders */
   --border: rgba(255, 255, 255, 0.06);
@@ -186,7 +204,7 @@ body {
   gap: 6px;
   padding: 8px 16px;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--primary), var(--primary-container));
   color: #fff;
   font-size: 13px;
@@ -194,10 +212,11 @@ body {
   cursor: pointer;
   transition: all var(--transition);
   font-family: var(--font);
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 20px var(--glass-glow);
+  box-shadow: 0 0 12px var(--glass-glow);
   transform: translateY(-1px);
 }
 
@@ -210,19 +229,20 @@ body {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: transparent;
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
   font-family: var(--font);
+  white-space: nowrap;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
   border-color: var(--text-muted);
 }

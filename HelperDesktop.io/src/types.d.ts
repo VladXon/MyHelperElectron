@@ -13,6 +13,7 @@ export interface ElectronWindowAPI {
   close: () => void;
   isMaximized: () => Promise<boolean>;
   onMaximizedChanged: (callback: (maximized: boolean) => void) => () => void;
+  onResized: (callback: (size: { width: number; height: number }) => void) => () => void;
 }
 
 export interface TokenData {

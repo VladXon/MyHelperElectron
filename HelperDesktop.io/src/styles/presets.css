@@ -1,27 +1,18 @@
-.preset-modal {
-  width: 520px;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.preset-modal .modal-header {
-  flex-shrink: 0;
-}
-
 .preset-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   overflow-y: auto;
-  padding-right: 4px;
+  padding: 0 var(--space-lg) var(--space-lg);
+  flex: 1;
+  min-height: 0;
 }
 
 .preset-apps-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 4px;
+  margin-top: 0;
 }
 
 .preset-apps-header .modal-label {
@@ -32,23 +23,24 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: 280px;
+  max-height: 240px;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .preset-app-row {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  padding: 10px;
-  background: rgba(255,255,255,0.015);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
   transition: border-color var(--transition);
 }
 
 .preset-app-row:hover {
-  border-color: var(--border);
+  border-color: var(--text-muted);
 }
 
 .preset-app-fields {
@@ -61,7 +53,7 @@
 
 .preset-app-name {
   font-size: 12px !important;
-  padding: 7px 10px !important;
+  padding: 6px 10px !important;
 }
 
 .preset-app-path-row {
@@ -132,22 +124,22 @@
 }
 
 .preset-app-path {
-  font-size: 11.5px !important;
-  padding: 6px 10px !important;
+  font-size: 11px !important;
+  padding: 5px 10px !important;
   font-family: 'JetBrains Mono', monospace !important;
   flex: 1;
   min-width: 0;
 }
 
 .preset-browse-btn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(0, 0, 0, 0.2);
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition);
@@ -156,18 +148,18 @@
 
 .preset-browse-btn:hover {
   background: var(--bg-hover);
-  color: var(--accent);
-  border-color: var(--accent);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 .preset-remove-btn {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
@@ -177,7 +169,7 @@
 }
 
 .preset-remove-btn:hover:not(:disabled) {
-  background: rgba(239,68,68,0.1);
+  background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
 }
 
@@ -188,9 +180,10 @@
 
 .preset-modal-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: flex-end;
-  padding-top: 8px;
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border);
 }
 
 .presets-page {
@@ -224,18 +217,18 @@
 }
 
 .presets-title {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
   letter-spacing: -0.01em;
 }
 
 .presets-description {
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(203, 195, 215, 0.6);
   max-width: 600px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .presets-search-wrap {
@@ -302,8 +295,8 @@
 
 .presets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: var(--space-gutter);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-md);
 }
 
 .presets-section {
@@ -322,7 +315,7 @@
 .preset-card {
   display: flex;
   flex-direction: column;
-  padding: var(--space-xl);
+  padding: var(--space-lg);
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -331,7 +324,6 @@
   transition: all var(--transition);
   position: relative;
   overflow: hidden;
-  height: 340px;
 }
 
 .preset-card:hover {
@@ -345,13 +337,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .preset-card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-lg);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-light);
   display: flex;
@@ -376,10 +368,10 @@
 }
 
 .preset-card-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--space-sm);
+  margin-bottom: var(--space-xs);
 }
 
 .preset-card:hover .preset-card-title {
@@ -387,12 +379,12 @@
 }
 
 .preset-card-description {
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(203, 195, 215, 0.6);
-  line-height: 1.6;
+  line-height: 1.5;
   flex: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -539,4 +531,32 @@
   letter-spacing: 0.2em;
   color: rgba(203, 195, 215, 0.2);
   margin-top: var(--space-sm);
+}
+
+@media (max-width: 1100px) {
+  .presets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .presets-page {
+    padding: var(--space-lg);
+  }
+
+  .presets-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .presets-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-height: 700px) {
+  .preset-apps-list {
+    max-height: 160px;
+  }
 }

@@ -140,6 +140,8 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 700,
+    minWidth: 800,
+    minHeight: 500,
     frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -160,6 +162,12 @@ const createWindow = () => {
   mainWindow.on('closed', () => {
     disconnectWebSocket();
     mainWindow = null;
+  });
+
+  mainWindow.on('resize', () => {
+    if (!mainWindow) return;
+    const [width, height] = mainWindow.getSize();
+    sendToRenderer('window-resized', { width, height });
   });
 
   if (!app.isPackaged) {

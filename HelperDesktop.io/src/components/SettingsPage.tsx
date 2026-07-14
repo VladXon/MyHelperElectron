@@ -4,6 +4,7 @@ import { Lock, CaretRight, Check, ArrowRight, Link, LinkBreak, User, TelegramLog
 import { useTheme } from '../ThemeContext';
 import { useAuth } from '../AuthContext';
 import TelegramModal from './TelegramModal';
+import Modal, { ModalClose, ModalHeader } from './Modal';
 import type { ThemeColorKey } from '../ThemeContext';
 
 const colorLabels: Record<ThemeColorKey, string> = {
@@ -61,56 +62,42 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <motion.div className="modal-overlay" onClick={onClose}
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}
-    >
-      <motion.div className="modal-card modal-card-wide" onClick={e => e.stopPropagation()}
-        initial={{ opacity: 0, y: 24, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.96 }}
-        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-      >
-        <button className="modal-close" onClick={onClose} disabled={loading}>
-          <Lock size={14} />
-        </button>
+    <Modal onClose={onClose} size="sm">
+      <ModalClose onClick={onClose} disabled={loading} />
+      <ModalHeader
+        icon={<Lock size={22} />}
+        title="Смена пароля"
+        subtitle={user?.login}
+      />
 
-        <div className="modal-header">
-          <div className="modal-icon">
-            <Lock size={22} />
+      {success ? (
+        <motion.div className="success-message" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+          <Check size={18} style={{ marginRight: 6, verticalAlign: 'middle' }} />
+          Пароль изменён
+        </motion.div>
+      ) : (
+        <form className="modal-form" onSubmit={handleSubmit}>
+          <div className="modal-field">
+            <label className="modal-label">Текущий пароль</label>
+            <input className="modal-input" type="password" placeholder="••••••••" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} autoFocus disabled={loading} />
           </div>
-          <h2 className="modal-title">Смена пароля</h2>
-          <p className="modal-subtitle">{user?.login}</p>
-        </div>
-
-        {success ? (
-          <motion.div className="success-message" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
-            <Check size={18} style={{ marginRight: 6, verticalAlign: 'middle' }} />
-            Пароль изменён
-          </motion.div>
-        ) : (
-          <form className="modal-form" onSubmit={handleSubmit}>
-            <div className="modal-field">
-              <label className="modal-label">Текущий пароль</label>
-              <input className="modal-input" type="password" placeholder="••••••••" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} autoFocus disabled={loading} />
-            </div>
-            <div className="modal-field">
-              <label className="modal-label">Новый пароль</label>
-              <input className="modal-input" type="password" placeholder="••••••••" value={newPassword} onChange={e => setNewPassword(e.target.value)} disabled={loading} />
-            </div>
-            <div className="modal-field">
-              <label className="modal-label">Подтвердите пароль</label>
-              <input className="modal-input" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} disabled={loading} />
-            </div>
-            <div className="modal-error-area">
-              {error ? <p className="modal-error">{error}</p> : null}
-            </div>
-            <button className="modal-submit" type="submit" disabled={loading}>
-              {loading ? 'Сохранение...' : 'Изменить пароль'}
-            </button>
-          </form>
-        )}
-      </motion.div>
-    </motion.div>
+          <div className="modal-field">
+            <label className="modal-label">Новый пароль</label>
+            <input className="modal-input" type="password" placeholder="••••••••" value={newPassword} onChange={e => setNewPassword(e.target.value)} disabled={loading} />
+          </div>
+          <div className="modal-field">
+            <label className="modal-label">Подтвердите пароль</label>
+            <input className="modal-input" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} disabled={loading} />
+          </div>
+          <div className="modal-error-area">
+            {error ? <p className="modal-error">{error}</p> : null}
+          </div>
+          <button className="modal-submit" type="submit" disabled={loading}>
+            {loading ? 'Сохранение...' : 'Изменить пароль'}
+          </button>
+        </form>
+      )}
+    </Modal>
   );
 }
 

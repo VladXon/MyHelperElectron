@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarBlank, Clock, CaretLeft, CaretRight, X } from '@phosphor-icons/react';
 
 interface DateTimePickerProps {
   value: string;
@@ -132,12 +131,12 @@ export default function DateTimePicker({ value, onChange }: DateTimePickerProps)
   return (
     <div className="dtpicker" ref={ref}>
       <button className="dtpicker-trigger" onClick={toggleOpen} type="button">
-        <CalendarBlank size={14} />
+        <span className="material-symbols-outlined" style={{ fontSize: 16 }}>calendar_today</span>
         <span>{displayValue || 'Выбрать дату и время'}</span>
         {value && (
-          <button className="dtpicker-clear" onClick={(e) => { e.stopPropagation(); clear(); }} type="button">
-            <X size={12} />
-          </button>
+          <span className="dtpicker-clear" onClick={(e) => { e.stopPropagation(); clear(); }} role="button" tabIndex={0}>
+            <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
+          </span>
         )}
       </button>
       <AnimatePresence>
@@ -151,9 +150,13 @@ export default function DateTimePicker({ value, onChange }: DateTimePickerProps)
           >
             <div className="dtpicker-calendar">
               <div className="dtpicker-cal-header">
-                <button onClick={() => changeMonth(-1)} type="button"><CaretLeft size={14} /></button>
+                <button onClick={() => changeMonth(-1)} type="button">
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>chevron_left</span>
+                </button>
                 <span>{MONTHS[viewMonth]} {viewYear}</span>
-                <button onClick={() => changeMonth(1)} type="button"><CaretRight size={14} /></button>
+                <button onClick={() => changeMonth(1)} type="button">
+                  <span className="material-symbols-outlined" style={{ fontSize: 18 }}>chevron_right</span>
+                </button>
               </div>
               <div className="dtpicker-weekdays">
                 {WEEKDAYS.map(d => <span key={d}>{d}</span>)}
@@ -178,20 +181,28 @@ export default function DateTimePicker({ value, onChange }: DateTimePickerProps)
             </div>
             <div className="dtpicker-time">
               <div className="dtpicker-time-label">
-                <Clock size={12} />
+                <span className="material-symbols-outlined" style={{ fontSize: 12 }}>schedule</span>
                 <span>Время</span>
               </div>
               <div className="dtpicker-time-controls">
                 <div className="dtpicker-spin">
-                  <button onClick={() => setHour(hours + 1)} type="button">▲</button>
+                  <button onClick={() => setHour(hours + 1)} type="button">
+                    <span className="material-symbols-outlined" style={{ fontSize: 14 }}>expand_less</span>
+                  </button>
                   <span>{pad(hours)}</span>
-                  <button onClick={() => setHour(hours - 1)} type="button">▼</button>
+                  <button onClick={() => setHour(hours - 1)} type="button">
+                    <span className="material-symbols-outlined" style={{ fontSize: 14 }}>expand_more</span>
+                  </button>
                 </div>
                 <span className="dtpicker-colon">:</span>
                 <div className="dtpicker-spin">
-                  <button onClick={() => setMin(minutes + 1)} type="button">▲</button>
+                  <button onClick={() => setMin(minutes + 1)} type="button">
+                    <span className="material-symbols-outlined" style={{ fontSize: 14 }}>expand_less</span>
+                  </button>
                   <span>{pad(minutes)}</span>
-                  <button onClick={() => setMin(minutes - 1)} type="button">▼</button>
+                  <button onClick={() => setMin(minutes - 1)} type="button">
+                    <span className="material-symbols-outlined" style={{ fontSize: 14 }}>expand_more</span>
+                  </button>
                 </div>
               </div>
               <div className="dtpicker-time-actions">

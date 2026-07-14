@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useCallback, useRef } from 'react';
 import { useAuth } from '../AuthContext';
+import Modal, { ModalClose, ModalHeader } from './Modal';
 
 interface AuthModalProps {
   onClose: () => void;
@@ -8,12 +8,16 @@ interface AuthModalProps {
 
 export default function AuthModal({ onClose }: AuthModalProps) {
   const { login } = useAuth();
+  const loginRef = useRef(login);
+  loginRef.current = login;
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
   const [loginVal, setLoginVal] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!loginVal.trim() || !password.trim()) return;
 
@@ -27,81 +31,60 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         setLoading(false);
         return;
       }
-      await login(loginVal.trim(), loginVal.trim(), password);
-      onClose();
+      await loginRef.current(loginVal.trim(), loginVal.trim(), password);
+      onCloseRef.current();
     } catch {
       setError('Неверный логин или пароль.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [loginVal, password]);
 
   return (
-    <motion.div
-      className="modal-overlay"
-      onClick={onClose}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.15 }}
-    >
-      <motion.div
-        className="modal-card"
-        onClick={e => e.stopPropagation()}
-        initial={{ opacity: 0, y: 24, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 16, scale: 0.96 }}
-        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-      >
-        <button className="modal-close" onClick={onClose} disabled={loading}>
-          <span className="material-symbols-outlined" style={{ fontSize: 14 }}>close</span>
-        </button>
+    <Modal onClose={onClose} size="sm">
+      <ModalClose onClick={onClose} disabled={loading} />
+      <ModalHeader
+        icon={<span className="material-symbols-outlined" style={{ fontSize: 22 }}>person</span>}
+        title="Войти в аккаунт"
+        subtitle="Введите логин и пароль"
+      />
 
-        <div className="modal-header">
-          <div className="modal-icon">
-            <span className="material-symbols-outlined" style={{ fontSize: 22 }}>person</span>
-          </div>
-          <h2 className="modal-title">Войти в аккаунт</h2>
-          <p className="modal-subtitle">Введите логин и пароль</p>
+      <form className="modal-form" onSubmit={handleSubmit}>
+        <div className="modal-field">
+          <label className="modal-label">Логин</label>
+          <input
+            className="modal-input"
+            type="text"
+            placeholder="your_login"
+            value={loginVal}
+            onChange={e => setLoginVal(e.target.value)}
+            autoFocus
+            disabled={loading}
+          />
         </div>
-
-        <form className="modal-form" onSubmit={handleSubmit}>
-          <div className="modal-field">
-            <label className="modal-label">Логин</label>
-            <input
-              className="modal-input"
-              type="text"
-              placeholder="your_login"
-              value={loginVal}
-              onChange={e => setLoginVal(e.target.value)}
-              autoFocus
-              disabled={loading}
-            />
-          </div>
-          <div className="modal-field">
-            <label className="modal-label">Пароль</label>
-            <input
-              className="modal-input"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              disabled={loading}
-            />
-          </div>
-          <div className="modal-error-area">
-            {error ? <p className="modal-error">{error}</p> : null}
-          </div>
-          <button className="modal-submit" type="submit" disabled={loading}>
-            {loading ? 'Вход...' : (
-              <>
-                Войти
-                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>arrow_forward</span>
-              </>
-            )}
-          </button>
-        </form>
-      </motion.div>
-    </motion.div>
+        <div className="modal-field">
+          <label className="modal-label">Пароль</label>
+          <input
+            className="modal-input"
+            type="password"
+            placeholder="••••••••"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+        <div className="modal-error-area">
+          {error ? <p className="modal-error">{error}</p> : null}
+        </div>
+        <button className="modal-submit" type="submit" disabled={loading}>
+          {loading ? 'Вход...' : (
+            <>
+              Войти
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>arrow_forward</span>
+            </>
+          )}
+        </button>
+      </form>
+    </Modal>
   );
 }

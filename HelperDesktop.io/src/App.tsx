@@ -5,7 +5,6 @@ import { ThemeProvider } from './ThemeContext';
 import Sidebar from './components/Sidebar';
 import Titlebar from './components/Titlebar';
 import AuthModal from './components/AuthModal';
-import PresetEditModal from './components/PresetEditModal';
 import CommandPalette from './components/CommandPalette';
 import type { Preset } from './types.d';
 
@@ -37,7 +36,6 @@ function AppContent() {
   const wasOffline = useRef(false);
 
   const [presets, setPresets] = useState<Preset[]>([]);
-  const [editPreset, setEditPreset] = useState<Preset | null | 'new'>('new');
 
   useEffect(() => {
     window.electronPresets.getAll().then(setPresets);
@@ -168,21 +166,16 @@ function AppContent() {
     setShowAuth(false);
   }, []);
 
-  const handleSavePreset = useCallback((saved: Preset) => {
-    setPresets(prev => {
-      const idx = prev.findIndex(p => p.id === saved.id);
-      if (idx >= 0) {
-        const next = [...prev];
-        next[idx] = saved;
-        return next;
-      }
-      return [...prev, saved];
-    });
-    setEditPreset('new');
-  }, []);
+  const handleLaunchPreset = useCallback((id: string) => {
+    const preset = presets.find(p => p.id === id);
+    if (preset && preset.apps.length > 0) {
+      void window.electronPresets.launch(preset.apps);
+    }
+  }, [presets]);
 
-  const handleCloseEdit = useCallback(() => {
-    setEditPreset('new');
+  const handleEditPreset = useCallback((id: string) => {
+    setActivePage('presets');
+    window.dispatchEvent(new CustomEvent('preset-edit', { detail: id }));
   }, []);
 
   const pinnedPresets = useMemo(() =>
@@ -232,8 +225,8 @@ function AppContent() {
           onLoginClick={handleLoginClick}
           onAddAccount={handleAddAccount}
           pinnedPresets={pinnedPresets}
-          onLaunchPreset={(_id: string) => { /* handled by PresetsPage */ }}
-          onEditPreset={(_id: string) => { /* handled by PresetsPage */ }}
+          onLaunchPreset={handleLaunchPreset}
+          onEditPreset={handleEditPreset}
         />
         <main className="content content-relative">
           <AnimatePresence>
@@ -243,15 +236,6 @@ function AppContent() {
       </div>
       <AnimatePresence>
         {showAuth && <AuthModal onClose={handleCloseAuth} />}
-      </AnimatePresence>
-      <AnimatePresence>
-        {editPreset !== 'new' && (
-          <PresetEditModal
-            preset={editPreset}
-            onClose={handleCloseEdit}
-            onSave={handleSavePreset}
-          />
-        )}
       </AnimatePresence>
       <AnimatePresence>
         {showCmdPalette && (
