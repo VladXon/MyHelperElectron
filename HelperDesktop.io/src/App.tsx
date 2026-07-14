@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo, lazy, Suspense } from 'react';
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider, useAuth } from './AuthContext';
 import { ThemeProvider } from './ThemeContext';
@@ -6,7 +6,6 @@ import Sidebar from './components/Sidebar';
 import Titlebar from './components/Titlebar';
 import AuthModal from './components/AuthModal';
 import CommandPalette from './components/CommandPalette';
-import type { Preset } from './types.d';
 
 const SettingsPage = lazy(() => import('./components/SettingsPage'));
 const PresetsPage = lazy(() => import('./components/PresetsPage'));
@@ -34,12 +33,6 @@ function AppContent() {
   const serverOnlineRef = useRef(true);
   const userRef = useRef(user);
   const wasOffline = useRef(false);
-
-  const [presets, setPresets] = useState<Preset[]>([]);
-
-  useEffect(() => {
-    window.electronPresets.getAll().then(setPresets);
-  }, []);
 
   userRef.current = user;
 
@@ -166,23 +159,6 @@ function AppContent() {
     setShowAuth(false);
   }, []);
 
-  const handleLaunchPreset = useCallback((id: string) => {
-    const preset = presets.find(p => p.id === id);
-    if (preset && preset.apps.length > 0) {
-      void window.electronPresets.launch(preset.apps);
-    }
-  }, [presets]);
-
-  const handleEditPreset = useCallback((id: string) => {
-    setActivePage('presets');
-    window.dispatchEvent(new CustomEvent('preset-edit', { detail: id }));
-  }, []);
-
-  const pinnedPresets = useMemo(() =>
-    presets.filter(p => p.pinned).map(p => ({ id: p.id, name: p.name, icon: p.icon })),
-    [presets]
-  );
-
   const PageComponent = pageComponents[activePage];
 
   if (loading) {
@@ -224,9 +200,6 @@ function AppContent() {
           onSelect={handleSelectPage}
           onLoginClick={handleLoginClick}
           onAddAccount={handleAddAccount}
-          pinnedPresets={pinnedPresets}
-          onLaunchPreset={handleLaunchPreset}
-          onEditPreset={handleEditPreset}
         />
         <main className="content content-relative">
           <AnimatePresence>

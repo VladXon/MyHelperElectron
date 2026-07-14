@@ -13,26 +13,16 @@ interface SidebarItem {
   label: string;
 }
 
-interface SidebarPreset {
-  id: string;
-  name: string;
-  icon: string;
-}
-
 interface SidebarProps {
   pages: SidebarItem[];
   active: string;
   onSelect: (id: string) => void;
   onLoginClick: () => void;
   onAddAccount?: () => void;
-  pinnedPresets: SidebarPreset[];
-  onLaunchPreset: (id: string) => void;
-  onEditPreset: (id: string) => void;
 }
 
 export default function Sidebar({
   pages, active, onSelect, onLoginClick, onAddAccount,
-  pinnedPresets, onLaunchPreset, onEditPreset,
 }: SidebarProps) {
   const { user, isDev, logout, accounts, activeAccount, switchAccount, removeAccount } = useAuth();
   const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -91,37 +81,6 @@ export default function Sidebar({
             <span className="sidebar-item-label">{item.label}</span>
           </motion.button>
         ))}
-
-        <div className="sidebar-divider" />
-
-        {pinnedPresets.length > 0 && (
-          <>
-            <div className="sidebar-section-header">
-              <span className="sidebar-section-label">Закреплённые</span>
-            </div>
-            {pinnedPresets.map(p => (
-              <div className="sidebar-preset-row" key={p.id}>
-                <motion.button
-                  className="sidebar-item sidebar-preset-item"
-                  onClick={() => onLaunchPreset(p.id)}
-                  title={`Запустить ${p.name}`}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                >
-                  <span className="sidebar-item-icon">{p.icon}</span>
-                  <span className="sidebar-item-label">{p.name}</span>
-                </motion.button>
-                <button
-                  className="sidebar-preset-edit"
-                  onClick={() => onEditPreset(p.id)}
-                  title="Редактировать"
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: 12 }}>edit</span>
-                </button>
-              </div>
-            ))}
-          </>
-        )}
       </nav>
 
       <div className="sidebar-bottom" ref={menuRef}>
