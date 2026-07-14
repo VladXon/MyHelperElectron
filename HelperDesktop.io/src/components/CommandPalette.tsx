@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { MagnifyingGlass, SquaresFour, Notebook, Gear, Tag } from '@phosphor-icons/react';
+import { useAuth } from '../AuthContext';
+import { useNotes } from '../hooks/useNotes';
+import { usePresets } from '../hooks/usePresets';
 
 const iconMap: Record<string, typeof SquaresFour> = {
   presets: SquaresFour,
@@ -12,8 +15,6 @@ interface CommandPaletteProps {
   onClose: () => void;
   onNavigate: (id: string) => void;
   pages: { id: string; label: string }[];
-  notes?: { id: number; title: string; body: string; tags: string[] }[];
-  presets?: { id: string; name: string; icon: string }[];
   onOpenNote?: (id: number) => void;
   onOpenPreset?: (id: string) => void;
 }
@@ -27,7 +28,10 @@ interface SearchItem {
   tags?: string[];
 }
 
-export default function CommandPalette({ onClose, onNavigate, pages, notes = [], presets = [], onOpenNote, onOpenPreset }: CommandPaletteProps) {
+export default function CommandPalette({ onClose, onNavigate, pages, onOpenNote, onOpenPreset }: CommandPaletteProps) {
+  const { user } = useAuth();
+  const { data: notes = [] } = useNotes(user?.id ?? null);
+  const { data: presets = [] } = usePresets();
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
