@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import crypto from 'node:crypto';
 import { getDb } from '../db';
-import { linkTelegram, unlinkTelegram, getLinkedTelegramId } from '@shared/telegram-links';
+import { linkTelegram, unlinkTelegram, getLinkedTelegramId } from '../../../shared/src/telegram-links';
 import { logger } from '../logger';
 
 const router = Router();

@@ -17,6 +17,10 @@
 ## React Query Migration
 
 - [x] Task1: Migrate NotesPage to React Query (commits c702221..7bcbfd5, review clean after fixes)
+- [x] Task2: Migrate PresetsPage to React Query (commits 7bcbfd5..fed0716, review clean after fixes)
+- [x] Task3: Update App.tsx to Remove Presets/Notes State (commits fed0716..ea5469f, review clean)
+- [x] Task4: Update CommandPalette to Use React Query (commits ea5469f..bdd8874, review clean)
+- [x] Task5: Final Cleanup and Verification (verification only, no changes needed)
 - [x] Task2: Migrate PresetsPage to React Query (commit 6143788)
 
 ## Notes

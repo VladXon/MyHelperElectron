@@ -1,376 +1,128 @@
-### Task3: Update Sidebar Component and Styles
+# Task 3: Update App.tsx to Remove Presets/Notes State
 
-**Files:**
-- Modify: `src/components/Sidebar.tsx`
-- Modify: `src/styles/sidebar.css`
+## Task Description
 
-**Interfaces:**
-- Consumes: Glass utilities from Task2
-- Produces: Updated sidebar with glass effects
+Read your task brief first: `D:\repos\MyHelperElectron\.superpowers\sdd\task-3-brief.md`
+It contains the full task text from the plan.
 
-- [ ] **Step1: Update sidebar.css with glass effects**
+## Context
 
-```css
-.sidebar {
-  width: 264px;
-  min-width: 264px;
-  background: var(--bg-sidebar);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--border);
-  user-select: none;
-  z-index: 2;
-  will-change: transform;
-}
+This is the third task in the React Query migration. Now that NotesPage and PresetsPage are self-contained with React Query, App.tsx no longer needs to manage their state.
 
-.sidebar-nav {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-lg);
-  flex: 1;
-}
+## Before You Begin
 
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-sm) var(--space-md);
-  border: none;
-  border-radius: var(--radius-lg);
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all var(--transition);
-  text-align: left;
-  font-family: var(--font);
-  width: 100%;
-  -webkit-app-region: no-drag;
-  font-weight: 500;
-  position: relative;
-}
+If you have questions about:
+- The requirements or acceptance criteria
+- The approach or implementation strategy
+- Dependencies or assumptions
+- Anything unclear in the task description
 
-.sidebar-item:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-}
+**Ask them now.** Raise any concerns before starting work.
 
-.sidebar-item.active {
-  background: rgba(208, 188, 255, 0.1);
-  color: var(--primary);
-}
+## Your Job
 
-.sidebar-item.active::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 20px;
-  background: var(--primary);
-  border-radius: 0 3px 3px 0;
-  box-shadow: 0 0 8px var(--glass-glow);
-}
+Once you're clear on requirements:
+1. Implement exactly what the task specifies
+2. Write tests (following TDD if task says to)
+3. Verify implementation works
+4. Commit your work
+5. Self-review (see below)
+6. Report back
 
-.sidebar-bottom {
-  padding: var(--space-md);
-  border-top: 1px solid var(--border);
-}
+Work from: `D:\repos\MyHelperElectron`
 
-.system-status {
-  padding: var(--space-md);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-  margin-bottom: var(--space-md);
-  background: rgba(255, 255, 255, 0.02);
-}
+**While you work:** If you encounter something unexpected or unclear, **ask questions**.
+It's always OK to pause and clarify. Don't guess or make assumptions.
 
-.system-status-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  display: flex;
-  align-items: center;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-xs);
-}
+While iterating, run the focused test for what you're changing; run the
+full suite once before committing, not after every edit.
 
-.system-status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary);
-  opacity: 0.6;
-}
+## Code Organization
 
-.system-status-value {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
+You reason best about code you can hold in context at once, and your edits are more
+reliable when files are focused. Keep this in mind:
+- Follow the file structure defined in the plan
+- Each file should have one clear responsibility with a well-defined interface
+- If a file you're creating is growing beyond the plan's intent, stop and report
+  it as DONE_WITH_CONCERNS — don't split files on your own without plan guidance
+- If an existing file you're modifying is already large or tangled, work carefully
+  and note it as a concern in your report
+- In existing codebases, follow established patterns. Improve code you're touching
+  the way a good developer would, but don't restructure things outside your task.
 
-.new-project-btn {
-  width: 100%;
-  padding: var(--space-sm);
-  border: 1px solid rgba(208, 188, 255, 0.4);
-  border-radius: var(--radius-lg);
-  background: transparent;
-  color: var(--primary);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition);
-  font-family: var(--font);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-}
+## When You're in Over Your Head
 
-.new-project-btn:hover {
-  background: rgba(208, 188, 255, 0.1);
-}
-```
+It is always OK to stop and say "this is too hard for me." Bad work is worse than
+no work. You will not be penalized for escalating.
 
-- [ ] **Step2: Update Sidebar.tsx component**
+**STOP and escalate when:**
+- The task requires architectural decisions with multiple valid approaches
+- You need to understand code beyond what was provided and can't find clarity
+- You feel uncertain about whether your approach is correct
+- The task involves restructuring existing code in ways the plan didn't anticipate
+- You've been reading file after file trying to understand the system without progress
 
-Replace the existing Sidebar component with updated JSX structure:
+**How to escalate:** Report back with status BLOCKED or NEEDS_CONTEXT. Describe
+specifically what you're stuck on, what you've tried, and what kind of help you need.
+The controller can provide more context, re-dispatch with a more capable model,
+or break the task into smaller pieces.
 
-```tsx
-import { useState, useRef, useEffect, type ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { SquaresFour, Gear, Notebook, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
-import { useAuth } from '../AuthContext';
+## Before Reporting Back: Self-Review
 
-const iconMap: Record<string, ReactNode> = {
-  presets: <SquaresFour size={20} />,
-  notes: <Notebook size={20} />,
-  settings: <Gear size={20} />,
-};
+Review your work with fresh eyes. Ask yourself:
 
-interface SidebarItem {
-  id: string;
-  label: string;
-}
+**Completeness:**
+- Did I fully implement everything in the spec?
+- Did I miss any requirements?
+- Are there edge cases I didn't handle?
 
-interface SidebarPreset {
-  id: string;
-  name: string;
-  icon: string;
-}
+**Quality:**
+- Is this my best work?
+- Are names clear and accurate (match what things do, not how they work)?
+- Is the code clean and maintainable?
 
-interface SidebarProps {
-  pages: SidebarItem[];
-  active: string;
-  onSelect: (id: string) => void;
-  onLoginClick: () => void;
-  onAddAccount?: () => void;
-  pinnedPresets: SidebarPreset[];
-  onLaunchPreset: (id: string) => void;
-  onEditPreset: (id: string) => void;
-}
+**Discipline:**
+- Did I avoid overbuilding (YAGNI)?
+- Did I only build what was requested?
+- Did I follow existing patterns in the codebase?
 
-export default function Sidebar({
-  pages, active, onSelect, onLoginClick, onAddAccount,
-  pinnedPresets, onLaunchPreset, onEditPreset,
-}: SidebarProps) {
-  const { user, isDev, logout, accounts, activeAccount, switchAccount, removeAccount } = useAuth();
-  const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+**Testing:**
+- Do tests actually verify behavior (not just mock behavior)?
+- Did I follow TDD if required?
+- Are tests comprehensive?
+- Is the test output pristine (no stray warnings or noise)?
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setShowAccountMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+If you find issues during self-review, fix them now before reporting.
 
-  const handleSwitchAccount = async (login: string) => {
-    if (login !== activeAccount) {
-      await switchAccount(login);
-    }
-    setShowAccountMenu(false);
-  };
+## After Review Findings
 
-  const handleRemoveAccount = async (e: React.MouseEvent, login: string) => {
-    e.stopPropagation();
-    if (accounts.length <= 1) return;
-    await removeAccount(login);
-  };
+If a reviewer finds issues and you fix them, re-run the tests that cover
+the amended code and append the results to your report file. Reviewers
+will not re-run tests for you — your report is the test evidence.
 
-  return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <div className="sidebar-logo">
-          <div className="sidebar-logo-icon">
-            <span className="material-symbols-outlined">layers</span>
-          </div>
-          <div className="sidebar-logo-text">
-            <h1 className="sidebar-title">Pro Studio</h1>
-            <p className="sidebar-subtitle">WORKSTATION</p>
-          </div>
-        </div>
-      </div>
+## Report Format
 
-      <nav className="sidebar-nav">
-        {pages.map(item => (
-          <motion.button
-            key={item.id}
-            className={`sidebar-item ${active === item.id ? 'active' : ''}`}
-            onClick={() => onSelect(item.id)}
-            aria-current={active === item.id ? 'page' : undefined}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-          >
-            <span className="sidebar-item-icon">{iconMap[item.id]}</span>
-            <span className="sidebar-item-label">{item.label}</span>
-          </motion.button>
-        ))}
+Write your full report to `D:\repos\MyHelperElectron\.superpowers\sdd\task-3-report.md`:
+- What you implemented (or what you attempted, if blocked)
+- What you tested and test results
+- **TDD Evidence** (if TDD was required for this task):
+  - RED: command run, relevant failing output before implementation, and why the failure was expected
+  - GREEN: command run and relevant passing output after implementation
+- Files changed
+- Self-review findings (if any)
+- Any issues or concerns
 
-        <div className="sidebar-divider" />
+Then report back with ONLY (under 15 lines — the detail lives in the
+report file):
+- **Status:** DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+- Commits created (short SHA + subject)
+- One-line test summary (e.g. "14/14 passing, output pristine")
+- Your concerns, if any
+- The report file path
 
-        {pinnedPresets.length > 0 && (
-          <>
-            <div className="sidebar-section-header">
-              <span className="sidebar-section-label">Закреплённые</span>
-            </div>
-            {pinnedPresets.map(p => (
-              <div className="sidebar-preset-row" key={p.id}>
-                <motion.button
-                  className="sidebar-item sidebar-preset-item"
-                  onClick={() => onLaunchPreset(p.id)}
-                  title={`Запустить ${p.name}`}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                >
-                  <span className="sidebar-item-icon">{p.icon}</span>
-                  <span className="sidebar-item-label">{p.name}</span>
-                </motion.button>
-                <button
-                  className="sidebar-preset-edit"
-                  onClick={() => onEditPreset(p.id)}
-                  title="Редактировать"
-                >
-                  <PencilSimple size={12} />
-                </button>
-              </div>
-            ))}
-          </>
-        )}
-      </nav>
+If BLOCKED or NEEDS_CONTEXT, put the specifics in the final message
+itself — the controller acts on it directly.
 
-      <div className="sidebar-bottom" ref={menuRef}>
-        <div className="system-status">
-          <div className="system-status-label">
-            <span className="system-status-dot"></span>
-            SYSTEM STATUS
-          </div>
-          <p className="system-status-value">CPU: 12% | RAM: 4.2GB</p>
-        </div>
-        
-        <button className="new-project-btn">
-          <span className="material-symbols-outlined">add</span>
-          <span>New Project</span>
-        </button>
-
-        <div className="user-row">
-          <div className="user-avatar-ring">
-            <div className="user-avatar">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 8C9.933 8 11.5 6.433 11.5 4.5C11.5 2.567 9.933 1 8 1C6.067 1 4.5 2.567 4.5 4.5C4.5 6.433 6.067 8 8 8Z" fill="currentColor"/>
-                <path d="M14 15C14 11.686 11.314 9 8 9C4.686 9 2 11.686 2 15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-              </svg>
-            </div>
-          </div>
-          <div className="user-meta">
-            {user ? (
-              <>
-                <div className="user-badge-row">
-                  <button
-                    className="user-greeting account-switch-btn"
-                    onClick={() => setShowAccountMenu(!showAccountMenu)}
-                    title="Выбрать аккаунт"
-                  >
-                    {user.name}
-                  </button>
-                  {isDev && <span className="dev-badge">dev</span>}
-                </div>
-                <button className="user-login-link" onClick={logout}>
-                  Выйти
-                </button>
-              </>
-            ) : (
-              <>
-                <span className="user-greeting">Гость</span>
-                <button className="user-login-link" onClick={onLoginClick}>
-                  Войти
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-
-        <AnimatePresence>
-          {showAccountMenu && user && (
-            <motion.div
-              className="account-menu"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 8 }}
-              transition={{ duration: 0.15 }}
-            >
-              {accounts.map(acct => (
-                <button
-                  key={acct.login}
-                  className={`account-menu-item ${acct.login === activeAccount ? 'active' : ''}`}
-                  onClick={() => handleSwitchAccount(acct.login)}
-                >
-                  <span className="account-menu-login">{acct.login}</span>
-                  {acct.login === activeAccount && <span className="account-menu-check">✓</span>}
-                  {accounts.length > 1 && (
-                    <button
-                      className="account-menu-remove"
-                      onClick={(e) => handleRemoveAccount(e, acct.login)}
-                      title="Удалить аккаунт"
-                    >
-                      <Trash size={12} />
-                    </button>
-                  )}
-                </button>
-              ))}
-              {onAddAccount && (
-                <button
-                  className="account-menu-item account-menu-add"
-                  onClick={() => {
-                    setShowAccountMenu(false);
-                    onAddAccount();
-                  }}
-                >
-                  <Plus size={14} />
-                  <span>Добавить аккаунт</span>
-                </button>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </aside>
-  );
-}
-```
-
-- [ ] **Step3: Commit**
-
-```bash
-git add src/components/Sidebar.tsx src/styles/sidebar.css
-git commit -m "feat: update sidebar with glassmorphism effects"
-```
+Use DONE_WITH_CONCERNS if you completed the work but have doubts about correctness.
+Use BLOCKED if you cannot complete the task. Use NEEDS_CONTEXT if you need
+information that wasn't provided. Never silently produce work you're unsure about.

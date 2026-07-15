@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
 import ErrorBoundary from './components/ErrorBoundary';
+import { QueryProvider } from './lib/queryClient';
 
 const container = document.getElementById('root');
 if (!container) {
@@ -12,9 +13,11 @@ if (!container) {
 const root = createRoot(container);
 root.render(
   <StrictMode>
-    <ErrorBoundary>
-      <App />
-    </ErrorBoundary>
+    <QueryProvider>
+      <ErrorBoundary>
+        <App />
+      </ErrorBoundary>
+    </QueryProvider>
   </StrictMode>,
 );
 

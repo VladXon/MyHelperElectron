@@ -5,21 +5,10 @@
 
   "shell": "pwsh",
 
-  "mcp": {
-    "stitch": {
-      "type": "remote",
-      "url": "https://stitch.googleapis.com/mcp",
-      "headers": {
-        "X-Goog-Api-Key": "AQ.Ab8RN6IESgqVfN4W02FUMdvFGHWCYna4C3gYZLZc1BQ7wCTRmQ"
-      },
-      "enabled": false
-    }
-  },
+  "mcp": {},
 
   "plugin": [
-    "superpowers@git+https://github.com/obra/superpowers",
-    "opencode-pty",
-    "opencode-notificator"
+    "superpowers@git+https://github.com/obra/superpowers"
   ],
 
   "lsp": true,
@@ -41,7 +30,9 @@
       ".git/**",
       "release/**",
       "*.db",
-      "*.db-journal"
+      "*.db-journal",
+      ".superpowers/**",
+      "docs/superpowers/**"
     ]
   },
 
