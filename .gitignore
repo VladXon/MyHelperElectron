@@ -26,3 +26,9 @@ Thumbs.db
 
 # OpenCode
 .opencode/
+
+# Temp
+plink.exe
+deploy.ps1
+ssh_*.txt
+ssh_cmd.ps1

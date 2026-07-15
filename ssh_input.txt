@@ -1,5 +1,0 @@
-qF9{t2b^{C
-node -v
-npm -v
-cd /opt && ls
-exit
